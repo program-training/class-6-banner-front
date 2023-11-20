@@ -7,11 +7,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // import { useAppDispatch } from "../../app/hooks";
 // import { setFlag, setName } from "../../app/flagSlice";
 // import { fetchCartData } from "../../app/cartSlice";
 
 export default function LogIn() {
+
+  const Navigate = useNavigate()
+  
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -37,7 +41,7 @@ export default function LogIn() {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    Navigate("/singIn")
   };
 
   const handleLogIn = async () => {
@@ -80,11 +84,9 @@ export default function LogIn() {
   };
 
   return (
-    <React.Fragment>
-      <Button  variant="outlined" onClick={handleClickOpen}>
-        Log IN
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+    <React.Fragment >
+      <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
+          backgroundSize: 'cover'}} open={true} onClose={handleClose}>
         <DialogTitle>Log in</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -120,9 +122,9 @@ export default function LogIn() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleLogIn}>Sign in</Button>
-          <Button onClick={handleRegistration}>registration</Button>
+          <Button onClick={handleClose}>forget password</Button>
+          <Button onClick={handleClose}>Sign up</Button>
+          <Button onClick={handleRegistration}>log-in</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

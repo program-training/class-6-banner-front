@@ -1,12 +1,14 @@
-import LogIn from "./component/pages/log-in/LogIn"
+// import ErrorBoundary from './component/Error'
+import MyRouter from "./component/routers/MyRouters"
+
 
 function App() {
- 
-
   return (
-    <>
-   <LogIn/>
-    </>
+    <div className='app' style={{ justifyContent: "center", alignItems: "center" }}>
+      {/* <ErrorBoundary> */}
+      <MyRouter />
+      {/* </ErrorBoundary> */}
+    </div>
   )
 }
 
