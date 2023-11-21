@@ -1,12 +1,14 @@
-import BannerPage from "./components/bannerPage/bannerPage"
+// import ErrorBoundary from './component/Error'
+import MyRouter from "./component/routers/MyRouters"
+
 
 function App() {
- 
-
   return (
-    <>
-   <BannerPage/>
-    </>
+    <div className='app' style={{ justifyContent: "center", alignItems: "center" }}>
+      {/* <ErrorBoundary> */}
+      <MyRouter />
+      {/* </ErrorBoundary> */}
+    </div>
   )
 }
 
