@@ -6,13 +6,15 @@ import {
     Grid,
     Card,
     CardMedia,
-    // Button,
+    Button,
     CardActions,
     CardContent,
+    
 } from "@mui/material";
+import { Link } from 'react-router-dom'; // Import Link
 
 export interface Banner {
-    _id: number;
+    _id: string;
     image: {
         url: string;
         alt: string;
@@ -42,18 +44,30 @@ export default function UserBanners() {
 
         fetchBanners();
     }, []);
+    const deleteBanner = async (id: string) => {
+        try {
+            await fetch(`http://localhost:8008/api/banners/${id}`, {
+                method: 'DELETE',
+            });
+            // Update the state to reflect the deletion
+            setBanners(banners.filter(banner => banner._id !== id));
+        } catch (error) {
+            console.error('Error deleting banner:', error);
+        }
+    }
 
     return (
-        <Container>
-            <Typography variant="h4" gutterBottom>
+       
+        <Container sx={{ padding: '2rem', maxWidth: '1200px' }}>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', marginBottom: '2rem' }}>
                 User Banners
             </Typography>
-            <Grid container spacing={8}>
+            <Grid container spacing={4}>
                 {banners.map((card: Banner) => (
                     <Grid item key={card._id} xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 345 }}>
+                        <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: '10px', margin: 'auto' }}>
                             <CardMedia
-                                sx={{ height: 140 }}
+                                sx={{ height: 200 }}
                                 image={card.image.url}
                                 title={card.image.alt}
                             />
@@ -76,8 +90,19 @@ export default function UserBanners() {
                                     </Typography>
                                 )}
                             </CardContent>
-                            <CardActions>
-                                {/* Button Actions Here */}
+                            <CardActions sx={{ justifyContent: 'center' }}>
+                                <Link to={`/editBanner/${card._id}`} style={{ textDecoration: 'none' }}>
+                                    <Button size="small" color="primary">
+                                        Edit
+                                    </Button>
+                                </Link>
+                                <Button
+                                    size="small"
+                                    color="secondary"
+                                    onClick={() => deleteBanner(card._id)}
+                                >
+                                    Delete
+                                </Button>
                             </CardActions>
                         </Card>
                     </Grid>
@@ -86,3 +111,5 @@ export default function UserBanners() {
         </Container>
     );
 }
+    
+

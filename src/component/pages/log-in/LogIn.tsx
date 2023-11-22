@@ -28,9 +28,10 @@ export default function LogIn() {
         );
         if (response.data) {   
           console.log(response.data,'sss');      
-          localStorage.setItem('username',JSON.stringify(response.data.message))
-          Navigate('/userBanners')
+          localStorage.setItem('username', JSON.stringify(response.data.username)); // Changed this line
+          Navigate('/userBanners');
         }
+        
       } catch (error) {
         console.error("Error during registration:", error);
       }
