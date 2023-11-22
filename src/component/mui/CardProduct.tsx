@@ -1,16 +1,18 @@
-import {Card, CardActionArea, CardContent, CardMedia,Typography,IconButton,Stack,} from "@mui/material";
+import {Card, CardActionArea, CardContent, CardMedia,Typography,Stack,} from "@mui/material";
 import { Product } from "../interface";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-
 interface ProductCardProps {
   product: Product;
+  onClick: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+
+
+const ProductCard: React.FC<ProductCardProps> = ({ product,onClick }) => {
  
   return (
         <Card
           key={Date.now() *Math.random() }
+          onClick={() => onClick()}
           sx={{
             margin: "15px",
             width: "100%",

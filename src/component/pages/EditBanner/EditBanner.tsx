@@ -8,7 +8,8 @@ import { useParams } from 'react-router-dom';
 import '../addBanner/AddBanner.css';
 
 interface BannerFormData {
-    id: number;
+    _id: string;
+    id?: number;
     image: {
         url: File | null;
         alt: string;
@@ -23,7 +24,8 @@ interface BannerFormData {
 }
 
 const schema = yup.object().shape({
-    id: yup.number().required('ID is required'),
+    _id: yup.string().required('ID is required'),
+    id:yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
@@ -39,7 +41,7 @@ const schema = yup.object().shape({
 const EditBanner: React.FC = () => {
     const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
-    const { id } = useParams();
+    const { _id } = useParams();
 
     const {
         register,
@@ -53,7 +55,7 @@ const EditBanner: React.FC = () => {
     useEffect(() => {
         const fetchBanner = async () => {
             try {
-                const response = await axios.get(`http://localhost:8008/api/banners/${id}`)
+                const response = await axios.get(`http://localhost:8008/api/banners/${_id}`)
                 const bannerData = response.data;
                 setValue('id', bannerData.id);
                 setValue('image.url', bannerData.image?.url);
@@ -70,7 +72,7 @@ const EditBanner: React.FC = () => {
             }
         };
         fetchBanner();
-    }, [id, setValue]);
+    }, [_id, setValue]);
 
     const getBase64 = (file: File) => {
         const reader = new FileReader();
@@ -102,7 +104,7 @@ const EditBanner: React.FC = () => {
                 "category": data.category,
                 "productID": data.productID,
             };
-            const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData);
+            const response = await axios.put(`http://localhost:8008/api/banners/${_id}`, requestData);
             if (response.status < 210) {
                 console.log('Banner updated successfully');
                 setStatus('Banner updated successfully!');

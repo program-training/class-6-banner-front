@@ -20,14 +20,13 @@ export default function LogIn() {
  
   const handleLogIn = async () => {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
-      console.log(userData);
       try {
         const response = await axios.post(
           "http://localhost:8008/api/users/login",
           userData
         );
-        if (response.data) {        
-          localStorage.setItem('username',JSON.stringify(response.data.message))
+        if (response.data) {      
+          localStorage.setItem('username',JSON.stringify(response.data.username))
           Navigate('/userBanners')
         }
         

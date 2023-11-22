@@ -8,7 +8,7 @@ export const validateEmail = (email: string): boolean => {
       password.length >= 7 &&
       password.length >= 7 &&
       ( /[a-z]/.test(password)) &&
-      /\d/.test(password) &&
-      /[!@#$%^&*(),.?":{}|<>]/.test(password)
+      /\d/.test(password) 
+      // /[!@#$%^&*(),.?":{}|<>]/.test(password)
     );
   };

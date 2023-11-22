@@ -2,42 +2,30 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
+import { Banner } from '../../interface';
 
-export interface Banner {
-  _id: string;
-  image: {
-    url: string;
-    alt: string;
-  };
-  text: string;
-  createdAt: Date;
-  author: string;
-  category: string;
-  rating: number;
-  sale?: number;
-  productID: number;
-}
 
-export default function BannerDetails() {
+export default function BannerPage() {
   const [banner, setBanner] = useState<Banner | null>(null);
-  const params = useParams();
-  console.log(params);
+  const {id} = useParams();
+  
+  
 
 
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get(`http://localhost:8008/api/banners/${params.id}`);
+        const response = await axios.get(`http://localhost:8008/api/banners/${id}`);
         setBanner(response.data);
       } catch (error) {
         console.error('Error fetching banner:', error);
       }
     };
 
-    if (params.id) {
+    if (id) {
       fetchBanner();
     }
-  }, [params.id]);
+  }, [id]);
 
   if (!banner) {
     return <div>Loading...</div>;

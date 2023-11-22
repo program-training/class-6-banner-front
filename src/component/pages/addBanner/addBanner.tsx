@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import './AddBanner.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface BannerFormData {
     id: number;
@@ -37,9 +37,10 @@ const schema = yup.object().shape({
 });
 
 const AddBanner: React.FC = () => {
+    const Navigate = useNavigate()
     const [image, setImage] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
-    const { productID } = useParams();
+    const {id } = useParams();
 
     const {
         register,
@@ -77,12 +78,13 @@ const AddBanner: React.FC = () => {
                 "rating": data.rating,
                 "sale": data.sale,
                 "category": data.category,
-                "productID": productID,
+                "productID": id,
             };
             const response = await axios.post('http://localhost:8008/api/banners', requestData);
             if (response.status < 210) {
                 console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
+                Navigate('/userBanners')
             } else {
                 console.error('Failed to add banner');
                 setStatus('Failed to add banner! please try again!');

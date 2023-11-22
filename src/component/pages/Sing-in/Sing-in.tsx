@@ -1,5 +1,5 @@
 import * as React from "react";
-import{GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login"
+// import{GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login"
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -22,16 +22,13 @@ export default function SignIn() {
     isAdmin:true
   })
 
-  const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    // Handle successful sign-in
-    console.log("Google Sign-In Success:", response);
-    // You might want to send the user's profile information or token to your server.
-  };
+  // const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+  //   console.log("Google Sign-In Success:", response);
+  // };
 
-  const handleGoogleSignInFailure = (error:any) => {
-    // Handle failed sign-in
-    console.error("Google Sign-In Failure:", error);
-  };
+  // const handleGoogleSignInFailure = (error:any) => {
+  //   console.error("Google Sign-In Failure:", error);
+  // };
 
   const handleRegistration = async () => {
     localStorage.setItem('email',JSON.stringify(user.email))
@@ -60,7 +57,8 @@ export default function SignIn() {
 
   return (
     <React.Fragment>
-      <Dialog  open={true}  >
+      <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
+          backgroundSize: 'cover'}} open={true}  >
         <DialogTitle>sing in</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -133,13 +131,13 @@ export default function SignIn() {
           />
         </DialogContent>
         <DialogActions>
-        <GoogleLogin
+        {/* <GoogleLogin
   clientId="83361752716-l79sdsffgft1hpf7pfsiqrr5pki7d4de.apps.googleusercontent.com"
   buttonText="Sign in with Google"
   onSuccess={handleGoogleSignInSuccess}
   onFailure={handleGoogleSignInFailure}
-  cookiePolicy={'single_host_origin'}
-/>
+  cookiePolicy={'single_host_origin'} */}
+{/* /> */}
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>
