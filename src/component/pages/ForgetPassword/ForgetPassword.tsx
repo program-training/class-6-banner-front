@@ -37,7 +37,7 @@ export default function ForgetPassword(){
                 }
                       
             
-            } catch (error) {
+            } catch (error:any) {
                  if(error.response.data.message == "user not found"){
                     window.alert("מייל לא קיים");
                 }

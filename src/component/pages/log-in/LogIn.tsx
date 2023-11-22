@@ -26,8 +26,7 @@ export default function LogIn() {
           "http://localhost:8008/api/users/login",
           userData
         );
-        if (response.data) {   
-          console.log(response.data,'sss');      
+        if (response.data) {        
           localStorage.setItem('username',JSON.stringify(response.data.message))
           Navigate('/userBanners')
         }
