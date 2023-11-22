@@ -24,12 +24,10 @@ export default function Header() {
                             <Button onClick={handleSignOut} sx={{ color: "white" }}>Sign Out</Button>
                         </Stack>
                     </Grid>
-
                     <Grid item>
                         <Stack direction="row" spacing={2} alignItems="center">
                             <IconButton aria-label="home">
                                 <HomeOutlinedIcon sx={{ color: "white" }} />
-
                             </IconButton>
 
                             <Stack direction="row" spacing={1} alignItems="center" color="white">

@@ -57,7 +57,6 @@ export default function UserBanners() {
     }
 
     return (
-       
         <Container sx={{ padding: '2rem', maxWidth: '1200px' }}>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', marginBottom: '2rem' }}>
                 User Banners
@@ -65,46 +64,49 @@ export default function UserBanners() {
             <Grid container spacing={4}>
                 {banners.map((card: Banner) => (
                     <Grid item key={card._id} xs={12} sm={6} md={4}>
-                        <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: '10px', margin: 'auto' }}>
-                            <CardMedia
-                                sx={{ height: 200 }}
-                                image={card.image.url}
-                                title={card.image.alt}
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h6" component="div">
-                                    {card.category}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    {card.text}
-                                </Typography>
-                                {card.sale && (
+                        <Link to={`/bannerPage/${card._id}`} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: '10px', margin: 'auto' }}>
+                                <CardMedia
+                                    sx={{ height: 200 }}
+                                    image={card.image.url}
+                                    title={card.image.alt}
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h6" component="div">
+                                        {card.category}
+                                    </Typography>
                                     <Typography
                                         variant="body2"
                                         color="text.secondary"
                                     >
-                                        Sold: {card.sale}
+                                        {card.text}
                                     </Typography>
-                                )}
-                            </CardContent>
-                            <CardActions sx={{ justifyContent: 'center' }}>
-                                <Link to={`/editBanner/${card._id}`} style={{ textDecoration: 'none' }}>
+                                    {card.sale && (
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                        >
+                                            Sold: {card.sale}
+                                        </Typography>
+                                    )}
+                                </CardContent>
+                                <CardActions sx={{ justifyContent: 'center' }}>
                                     <Button size="small" color="primary">
                                         Edit
                                     </Button>
-                                </Link>
-                                <Button
-                                    size="small"
-                                    color="secondary"
-                                    onClick={() => deleteBanner(card._id)}
-                                >
-                                    Delete
-                                </Button>
-                            </CardActions>
-                        </Card>
+                                    <Button
+                                        size="small"
+                                        color="secondary"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteBanner(card._id);
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Link>
                     </Grid>
                 ))}
             </Grid>

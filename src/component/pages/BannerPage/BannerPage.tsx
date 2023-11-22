@@ -1,8 +1,10 @@
-import { useState } from "react";
-import Button from '@mui/material/Button';
-interface Banner {
-  _id?: string;
-  id: number;
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
+
+export interface Banner {
+  _id: string;
   image: {
     url: string;
     alt: string;
@@ -13,80 +15,75 @@ interface Banner {
   category: string;
   rating: number;
   sale?: number;
+  productID: number;
 }
 
-export default function BannerPage() {
-  const [banner, setBanner] = useState<Banner | undefined>({
-    id: 1,
-    image: {
-      url: "https://ksp.co.il/m_action_libs/img/topCategory/22.png?v=2029",
-      alt: "breck pest",
-    },
-    text: "lihkjgk",
-    createdAt: new Date(),
-    author: "Author 1",
-    category: "food",
-    rating: 4.5,
-    sale: 20,
-  });
+export default function BannerDetails() {
+  const [banner, setBanner] = useState<Banner | null>(null);
+  const params = useParams();
+  console.log(params);
+
+
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8008/api/banners/${params.id}`);
+        setBanner(response.data);
+      } catch (error) {
+        console.error('Error fetching banner:', error);
+      }
+    };
+
+    if (params.id) {
+      fetchBanner();
+    }
+  }, [params.id]);
+
+  if (!banner) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        display: "flex",
-        flexDirection: "column",
-        margin: "2rem 2rem 6rem 2rem",
-      }}
-    >
-      <div>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h1> Banner Details </h1>
-        </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "60%",
-              alignItems: "flex-start",
-            }}
-          >
-              <h3>category:</h3>
-              {banner?.category}
-
-              <h3>rating:</h3>
-              {banner?.rating}  
+    <Container>
+    <Card sx={{ maxWidth: 345, m: 2, boxShadow: 3 }}> {/* שינוי גודל הכרטיס */}
+      <CardMedia
+        component="img"
+        height="140"
+        image={banner.image.url}
+        alt={banner.image.alt}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {banner.category}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {banner.text}
+        </Typography>
+        <Typography variant="body2">
+          Author: {banner.author}
+        </Typography>
+        <Typography variant="body2">
+          Rating: {banner.rating}
+        </Typography>
+        {banner.sale && (
+          <Typography variant="body2">
+            Sale: {banner.sale}%
+          </Typography>
+        )}
+        <Typography variant="body2">
+          Product ID: {banner.productID}
+        </Typography>
+        <Typography variant="body2">
+          Created At: {new Date(banner.createdAt).toLocaleDateString()}
+        </Typography>
+        {banner._id && (
+          <Typography variant="body2">
+            Banner ID: {banner._id}
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
+  </Container>
   
-              <h3>sale:</h3>
-              {banner?.sale}
-          </div>
-          <div style={{ width: "60%", marginLeft: "20px" }}>
-            {banner?.image && (
-              <div>
-                <img
-                  src={banner?.image.url}
-                  alt={banner?.image.alt}
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    marginBottom: "10px",
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-          <Button variant="contained">Return to categories</Button>
-    </div>
   );
-  
 }
