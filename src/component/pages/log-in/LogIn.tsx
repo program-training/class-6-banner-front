@@ -30,6 +30,7 @@ export default function LogIn() {
           localStorage.setItem('username',JSON.stringify(response.data.message))
           Navigate('/userBanners')
         }
+        
       } catch (error) {
         console.error("Error during registration:", error);
       }
