@@ -1,4 +1,5 @@
 import * as React from "react";
+import{GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login"
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,56 +8,51 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export default function SignIn() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [passwordVerification, setPasswordVerification] = React.useState("");
-  const [userName, setUserName] = React.useState("");
-  
 
-//   const dispatch = useAppDispatch();
+  const Navigate = useNavigate()
+  const [passwordVerification,setPasswordVerification] = React.useState('')
+  const [user,setUser] = React.useState({
+    username: "",
+    email: "",
+    password: "",
+    isAdmin:true
+  })
 
-//   const open = useAppSelector((state) => state.flag.flag);
-
-  const handleClickOpen = () => {
-    // dispatch(setFlag(true));
+  const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+    // Handle successful sign-in
+    console.log("Google Sign-In Success:", response);
+    // You might want to send the user's profile information or token to your server.
   };
 
-  const handleClose = () => {
-    // dispatch(setFlag(false));
+  const handleGoogleSignInFailure = (error:any) => {
+    // Handle failed sign-in
+    console.error("Google Sign-In Failure:", error);
   };
 
   const handleRegistration = async () => {
+    localStorage.setItem('email',JSON.stringify(user.email))
+
     if (
-      password === passwordVerification &&
-      password.length > 0 &&
-      email.length > 0 &&
-      userName.length > 0
+      user.password === passwordVerification &&
+      user.password.length > 0 &&
+      user.email.length > 0 &&
+      user.username.length > 0
     ) {
       try {
-        const userData = {
-          userName: userName,
-          email: email,
-          password: password,
-        };
-        console.log(userData);
-        
+        console.log(user);
         const response = await axios.post(
-          // "http://localhost:8181/api/users",
-          "https://api-store-f2id.onrender.com/api/users",
-          userData
+          "http://localhost:8008/api/users/register",
+          user
         );
-        if (response.data) {
-        //   dispatch(setFlag(false));
-          if (userName !== "No user with this email in the database!" && userName !== "The email or password is incorrect!" && response.status < 400) {
-
-          localStorage.setItem("userName", userName);
-        //   dispatch(setNameCart(userName))
-          }
+        if(response){
+          Navigate("/")
         }
-      } catch (error) {
+        }
+      catch (error) {
         console.error("Error during registration:", error);
       }
     }
@@ -64,7 +60,7 @@ export default function SignIn() {
 
   return (
     <React.Fragment>
-      <Dialog  open={true} onClose={handleClose} >
+      <Dialog  open={true}  >
         <DialogTitle>sing in</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -72,9 +68,12 @@ export default function SignIn() {
           </DialogContentText>
           <TextField
             onChange={(e) => {
-              setUserName(e.target.value);
+              setUser((prevData) => ({
+                ...prevData,
+                username: e.target.value,
+              }));
             }}
-            value={userName}
+            value={user.username}
             autoFocus
             margin="dense"
             id="name"
@@ -86,9 +85,12 @@ export default function SignIn() {
           />
           <TextField
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUser((prevData) => ({
+                ...prevData,
+                email: e.target.value,
+              }));
             }}
-            value={email}
+            value={user.email}
             autoFocus
             margin="dense"
             id="email"
@@ -100,9 +102,12 @@ export default function SignIn() {
           />
           <TextField
             onChange={(e) => {
-              setPassword(e.target.value);
+              setUser((prevData) => ({
+                ...prevData,
+                password: e.target.value,
+              }));
             }}
-            value={password}
+            value={user.password}
             autoFocus
             margin="dense"
             id="password"
@@ -128,7 +133,13 @@ export default function SignIn() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>sing with google</Button>
+        <GoogleLogin
+  clientId="83361752716-l79sdsffgft1hpf7pfsiqrr5pki7d4de.apps.googleusercontent.com"
+  buttonText="Sign in with Google"
+  onSuccess={handleGoogleSignInSuccess}
+  onFailure={handleGoogleSignInFailure}
+  cookiePolicy={'single_host_origin'}
+/>
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>

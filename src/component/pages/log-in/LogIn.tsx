@@ -8,85 +8,51 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import { useAppDispatch } from "../../app/hooks";
-// import { setFlag, setName } from "../../app/flagSlice";
-// import { fetchCartData } from "../../app/cartSlice";
+import { validateEmail, validatePassword } from "./functions";
 
 export default function LogIn() {
-
+  const ls = localStorage.getItem("email")
   const Navigate = useNavigate()
-  
-  const [open, setOpen] = React.useState(false);
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-//   const dispatch = useAppDispatch();
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password: string): boolean => {
-    return (
-      password.length >= 7 &&
-      password.length >= 7 &&
-      (/[A-Z]/.test(password) || /[a-z]/.test(password)) &&
-      /\d/.test(password) &&
-      /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    );
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    Navigate("/singIn")
-  };
-
+  const [userData, setUserData] = React.useState({
+    email: ls ? JSON.parse(ls) : "",
+    password:'',
+  });
+ 
   const handleLogIn = async () => {
-    if (validateEmail(email) && validatePassword(password)) {
+    if (validateEmail(userData.email) && validatePassword(userData.password)) {
+      console.log(userData);
       try {
-        const userData = {
-          email: email,
-          password: password,
-        };
-
         const response = await axios.post(
-          // "http://localhost:8181/api/users/login",
-          "https://api-store-f2id.onrender.com/api/users/login",
+          "http://localhost:8008/api/users/login",
           userData
         );
-
-        if (response.data) {
-          const userName = response.data;
-          if (userName !== "No user with this email in the database!" && userName !== "The email or password is incorrect!" && response.status < 400) {
-            // dispatch(setName(userName));
-            // dispatch(fetchCartData({ name: userName }));
-          }
+        if (response.data) {        
+          localStorage.setItem('username',JSON.stringify(response.data.message))
+          Navigate('/userBanners')
         }
-
       } catch (error) {
         console.error("Error during registration:", error);
-        // dispatch(setFlag(true));
       }
-      setOpen(false);
-    } else if (validateEmail(email) && !validatePassword(password)) {
+    } else if (validateEmail(userData.email) && !validatePassword(userData.password)) {
       window.alert("סיסמא לא תקינה");
-    } else if (!validateEmail(email) && validatePassword(password)) {
+    } else if (!validateEmail(userData.email) && validatePassword(userData.password)) {
       window.alert("מייל לא תקין");
     } else window.alert("מייל וסיסמא לא תקינים");
   };
 
   const handleRegistration = () => {
-    // dispatch(setFlag(true));
-    setOpen(false);
+    Navigate("/singIn")
+  };
+
+  const forgetPassword = () => {
+    localStorage.setItem('email',JSON.stringify(userData.email))
+    Navigate("/forgetPassword")
   };
 
   return (
     <React.Fragment >
       <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
-          backgroundSize: 'cover'}} open={true} onClose={handleClose}>
+          backgroundSize: 'cover'}} open={true} >
         <DialogTitle>Log in</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -94,9 +60,12 @@ export default function LogIn() {
           </DialogContentText>
           <TextField
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUserData((prevData) => ({
+                ...prevData,
+                email: e.target.value,
+              }));
             }}
-            value={email}
+            value={userData.email}
             autoFocus
             margin="dense"
             id="email"
@@ -108,9 +77,12 @@ export default function LogIn() {
           />
           <TextField
             onChange={(e) => {
-              setPassword(e.target.value);
+              setUserData((prevData) => ({
+                ...prevData,
+                password: e.target.value,
+              }));
             }}
-            value={password}
+            value={userData.password}
             autoFocus
             margin="dense"
             id="password"
@@ -122,9 +94,9 @@ export default function LogIn() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>forget password</Button>
-          <Button onClick={handleClose}>Sign up</Button>
-          <Button onClick={handleRegistration}>log-in</Button>
+          <Button onClick={forgetPassword}>forget password</Button>
+          <Button onClick={handleRegistration}>Sign up</Button>
+          <Button onClick={handleLogIn}>log-in</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
