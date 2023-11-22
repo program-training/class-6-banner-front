@@ -1,4 +1,5 @@
 import * as React from "react";
+import{GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login"
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -20,6 +21,17 @@ export default function SignIn() {
     password: "",
     isAdmin:true
   })
+
+  const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+    // Handle successful sign-in
+    console.log("Google Sign-In Success:", response);
+    // You might want to send the user's profile information or token to your server.
+  };
+
+  const handleGoogleSignInFailure = (error:any) => {
+    // Handle failed sign-in
+    console.error("Google Sign-In Failure:", error);
+  };
 
   const handleRegistration = async () => {
     localStorage.setItem('email',JSON.stringify(user.email))
@@ -121,7 +133,13 @@ export default function SignIn() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>console.log('goo')}>sing with google</Button>
+        <GoogleLogin
+  clientId="83361752716-l79sdsffgft1hpf7pfsiqrr5pki7d4de.apps.googleusercontent.com"
+  buttonText="Sign in with Google"
+  onSuccess={handleGoogleSignInSuccess}
+  onFailure={handleGoogleSignInFailure}
+  cookiePolicy={'single_host_origin'}
+/>
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>
