@@ -7,6 +7,9 @@ import axios from 'axios';
 import './AddBanner.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const api = import.meta.env.VITE_MY_SERVER;
+
+
 interface BannerFormData {
     id: number;
     image: {
@@ -90,7 +93,7 @@ const AddBanner: React.FC = () => {
                 "category": data.category,
                 "productID": id,
             };
-            const response = await axios.post('http://localhost:8008/api/banners', requestData);
+            const response = await axios.post(`${api}/api/banners`, requestData);
             if (response.status < 210) {
                 console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
