@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import '../addBanner/AddBanner.css';
 
 interface BannerFormData {
-    _id: string;
+    // _id: string;
     id?: number;
     image: {
         url: File | null;
@@ -20,11 +20,11 @@ interface BannerFormData {
     rating: number;
     sale: number;
     category: string;
-    productID?: string;
+    productID?: number;
 }
 
 const schema = yup.object().shape({
-    _id: yup.string().required('ID is required'),
+    // _id: yup.string().required('ID is required'),
     id:yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
@@ -42,7 +42,7 @@ const EditBanner: React.FC = () => {
     const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
     const { id } = useParams();
-    console.log(id);
+    console.log("id+ "+id);
 
     const {
         register,
