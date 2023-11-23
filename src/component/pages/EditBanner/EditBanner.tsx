@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, InputLabel, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState, useRef } from 'react';
+import { Box, Button, InputLabel, TextField, Typography, CardMedia } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import '../addBanner/AddBanner.css';
 
 interface BannerFormData {
-    _id: string;
     id?: number;
     image: {
         url: File | null;
@@ -20,12 +19,11 @@ interface BannerFormData {
     rating: number;
     sale: number;
     category: string;
-    productID?: string;
+    productID?: number;
 }
 
 const schema = yup.object().shape({
-    _id: yup.string().required('ID is required'),
-    id:yup.number(),
+    id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
@@ -41,8 +39,9 @@ const schema = yup.object().shape({
 const EditBanner: React.FC = () => {
     const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
+    const [imagePreview, setImagePreview] = useState('');
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const { id } = useParams();
-    console.log(id);
 
     const {
         register,
@@ -58,6 +57,7 @@ const EditBanner: React.FC = () => {
             try {
                 const response = await axios.get(`http://localhost:8008/api/banners/${id}`)
                 const bannerData = response.data;
+                setImagePreview(bannerData.image.url)
                 setValue('id', bannerData.id);
                 setValue('image.url', bannerData.image?.url);
                 setValue('image.alt', bannerData.image?.alt);
@@ -88,6 +88,12 @@ const EditBanner: React.FC = () => {
             getBase64(e.target.files[0]);
         }
     }
+
+    const handleReplaceImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
 
     const onSubmit: SubmitHandler<BannerFormData> = async (data) => {
         try {
@@ -123,59 +129,70 @@ const EditBanner: React.FC = () => {
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Edit Banner</Typography>
             <Box component="form" sx={{ backgroundColor: "#f9f9f9", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
                 <InputLabel htmlFor="id">ID:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     {...register('id')}
                     error={!!errors.id}
                     helperText={errors.id?.message}
                 />
-                <InputLabel htmlFor="image.url">Image URL:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <InputLabel htmlFor="img">Current image:</InputLabel>
+                <CardMedia
+                    component="img"
+                    alt="Banner Preview"
+                    height="140"
+                    image={imagePreview}
+                    sx={{ marginBottom: "15px", maxWidth: "222px" }}
+                />
+                <TextField className='formField' sx={{ marginBottom: "15px", display: "none" }}
                     type='file'
                     {...register('image.url')}
                     onChange={onImageChange}
                     error={!!errors.image?.url}
                     helperText={errors.image?.url?.message}
+                    inputRef={fileInputRef}
                 />
+                <InputLabel htmlFor="image.url">
+                    <Button onClick={handleReplaceImageClick} variant="contained">Replace the image</Button>
+                </InputLabel>
                 <InputLabel htmlFor="image.alt">Alt:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     {...register('image.alt')}
                     error={!!errors.image?.alt}
                     helperText={errors.image?.alt?.message}
                 />
                 <InputLabel htmlFor="text">Text:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     {...register('text')}
                     error={!!errors.text}
                     helperText={errors.text?.message}
                 />
                 <InputLabel htmlFor="createAt">Create at:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px", width: "222px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px", width: "222px" }}
                     {...register('createAt')}
                     error={!!errors.createAt}
                     helperText={errors.createAt?.message}
                 />
                 <InputLabel htmlFor="author">Author:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     {...register('author')}
                     error={!!errors.author}
                     helperText={errors.author?.message}
                 />
                 <InputLabel htmlFor="rating">Rating:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     type='number'
                     {...register('rating')}
                     error={!!errors.rating}
                     helperText={errors.rating?.message}
                 />
                 <InputLabel htmlFor="sale">Sale:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     type='number'
                     {...register('sale')}
                     error={!!errors.sale}
                     helperText={errors.sale?.message}
                 />
                 <InputLabel htmlFor="category">Category:</InputLabel>
-                <TextField className='formField' sx={{marginBottom: "15px"}}
+                <TextField className='formField' sx={{ marginBottom: "15px" }}
                     {...register('category')}
                     error={!!errors.category}
                     helperText={errors.category?.message}
