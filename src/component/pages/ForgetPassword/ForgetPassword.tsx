@@ -9,6 +9,8 @@ import { useState } from "react"
 import {  validatePassword } from "../log-in/functions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const api = import.meta.env.VITE_MY_SERVER;
+
 
 export default function ForgetPassword(){
     
@@ -24,7 +26,7 @@ export default function ForgetPassword(){
         if (validatePassword(obj.newPassword)) {
             try {
               const response = await axios.put(
-                "http://localhost:8008/api/users/changepassword",
+                `${api}/api/users/changepassword`,
                 obj
               );
               console.log(response.data,'ddd');
