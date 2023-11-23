@@ -10,6 +10,7 @@ const api = import.meta.env.VITE_MY_SERVER;
 
 
 interface BannerFormData {
+
     id?: number;
     image: {
         url: File | null;
@@ -25,6 +26,8 @@ interface BannerFormData {
 }
 
 const schema = yup.object().shape({
+
+
     id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
@@ -44,6 +47,7 @@ const EditBanner: React.FC = () => {
     const [imagePreview, setImagePreview] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { id } = useParams();
+
 
     const {
         register,
