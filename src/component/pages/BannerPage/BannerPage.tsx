@@ -32,29 +32,24 @@ export default function BannerPage() {
   }
 
   return (
-    <Container>
-    <Card sx={{ maxWidth: 345, m: 2, boxShadow: 3 }}> {/* שינוי גודל הכרטיס */}
-      <CardMedia
-        component="img"
-        height="140"
-        image={banner.image.url}
-        alt={banner.image.alt}
-      />
+    <Container  sx={{ display:'flex', justifyContent:'center',margin:'3rem' }}>
+    <Card sx={{backgroundColor: '#f5f5f5',width: '90%',margin: '0 auto', maxWidth: '90rem', boxShadow: 3, display:'flex',justifyContent:'space-between'}}> {/* שינוי גודל הכרטיס */}
+      <div>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h4" component="div" sx={{ marginY: '3rem'}}>
           {banner.category}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography  component="div" variant="h6" sx={{ marginY: '1rem' , width:'65%'}}>
           {banner.text}
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body2" >
           Author: {banner.author}
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body2" >
           Rating: {banner.rating}
         </Typography>
         {banner.sale && (
-          <Typography variant="body2">
+          <Typography variant="body2" >
             Sale: {banner.sale}%
           </Typography>
         )}
@@ -70,6 +65,15 @@ export default function BannerPage() {
           </Typography>
         )}
       </CardContent>
+      </div>
+      <div style={{ width: '50%',height:'auto', margin:'0.5rem' }}>
+      <CardMedia
+        component="img"
+        height="auto"
+        image={banner.image.url}
+        alt={banner.image.alt} 
+      />
+      </div>
     </Card>
   </Container>
   
