@@ -11,7 +11,7 @@ export interface Banner {
   category: string;
   rating: number;
   sale?: number;
-  productID: string;
+  productID: number;
 }
 
 

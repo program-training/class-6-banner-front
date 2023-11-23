@@ -41,7 +41,8 @@ const schema = yup.object().shape({
 const EditBanner: React.FC = () => {
     const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
-    const { _id } = useParams();
+    const { id } = useParams();
+    console.log(id);
 
     const {
         register,
@@ -55,7 +56,7 @@ const EditBanner: React.FC = () => {
     useEffect(() => {
         const fetchBanner = async () => {
             try {
-                const response = await axios.get(`http://localhost:8008/api/banners/${_id}`)
+                const response = await axios.get(`http://localhost:8008/api/banners/${id}`)
                 const bannerData = response.data;
                 setValue('id', bannerData.id);
                 setValue('image.url', bannerData.image?.url);
@@ -72,7 +73,7 @@ const EditBanner: React.FC = () => {
             }
         };
         fetchBanner();
-    }, [_id, setValue]);
+    }, [id, setValue]);
 
     const getBase64 = (file: File) => {
         const reader = new FileReader();
@@ -104,7 +105,7 @@ const EditBanner: React.FC = () => {
                 "category": data.category,
                 "productID": data.productID,
             };
-            const response = await axios.put(`http://localhost:8008/api/banners/${_id}`, requestData);
+            const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData);
             if (response.status < 210) {
                 console.log('Banner updated successfully');
                 setStatus('Banner updated successfully!');
