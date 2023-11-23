@@ -1,6 +1,6 @@
-import {Card, CardActionArea, CardContent, CardMedia,Typography,IconButton,Stack,} from "@mui/material";
+import {Card, CardActionArea, CardContent, CardMedia,Typography,Stack,} from "@mui/material";
 import { Product } from "../interface";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+// import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 interface ProductCardProps {
   product: Product;
