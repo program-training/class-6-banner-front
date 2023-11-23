@@ -6,8 +6,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import '../addBanner/AddBanner.css';
+const api = import.meta.env.VITE_MY_SERVER;
+
 
 interface BannerFormData {
+
     id?: number;
     image: {
         url: File | null;
@@ -23,6 +26,8 @@ interface BannerFormData {
 }
 
 const schema = yup.object().shape({
+
+
     id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
@@ -43,6 +48,7 @@ const EditBanner: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { id } = useParams();
 
+
     const {
         register,
         handleSubmit,
@@ -55,7 +61,7 @@ const EditBanner: React.FC = () => {
     useEffect(() => {
         const fetchBanner = async () => {
             try {
-                const response = await axios.get(`http://localhost:8008/api/banners/${id}`)
+                const response = await axios.get(`${api}/api/banners/${id}`)
                 const bannerData = response.data;
                 setImagePreview(bannerData.image.url)
                 setValue('id', bannerData.id);
