@@ -108,19 +108,20 @@ const AddBanner: React.FC = () => {
         <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Add New Banner</Typography>
             <Box component="form" sx={{ backgroundColor: "#f2f2f2e8", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
-                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
+                <TextField className='formField' sx={{ marginBottom: "20px", backgroundColor: "#f9f9f9" }}
                     label="ID:"
                     {...register('id')}
                     error={!!errors.id}
                     helperText={errors.id?.message}
                 />
+                { uploadedImage ? (
                 <CardMedia
                     component="img"
                     alt="No photo added"
                     height="140"
                     image={(image || (uploadedImage ? URL.createObjectURL(uploadedImage) : '')) as string}
                     sx={{ marginBottom: "15px", maxWidth: "222px" }}
-                />
+                />) : null}
                 <TextField className='formField' sx={{ marginBottom: "5px", backgroundColor: "#f9f9f9", display: "none" }}
                     type='file'
                     label="Upload image"
