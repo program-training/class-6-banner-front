@@ -1,20 +1,12 @@
 import { useState, useEffect } from "react";
-import {
-  Container,
-  Typography,
-  Card,
-  CardMedia,
-  Button,
-  CardActions,
-  CardContent,
-  CardActionArea,
+import { Container,Typography,Card,CardActions,CardContent,CardActionArea, CardMedia, Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Banner } from "../../interface";
 import axios from "axios";
 import Header from "./Header";
 import Footer from "./Footer";
-
+const api = import.meta.env.VITE_MY_SERVER;
 
 
 
