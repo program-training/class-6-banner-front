@@ -23,13 +23,10 @@ export default function SignIn() {
   })
 
   // const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-  //   // Handle successful sign-in
   //   console.log("Google Sign-In Success:", response);
-  //   // You might want to send the user's profile information or token to your server.
   // };
 
   // const handleGoogleSignInFailure = (error:any) => {
-  //   // Handle failed sign-in
   //   console.error("Google Sign-In Failure:", error);
   // };
 
@@ -60,7 +57,8 @@ export default function SignIn() {
 
   return (
     <React.Fragment>
-      <Dialog  open={true}  >
+      <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
+          backgroundSize: 'cover'}} open={true}  >
         <DialogTitle>sing in</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -138,8 +136,8 @@ export default function SignIn() {
   buttonText="Sign in with Google"
   onSuccess={handleGoogleSignInSuccess}
   onFailure={handleGoogleSignInFailure}
-  cookiePolicy={'single_host_origin'}
-/> */}
+  cookiePolicy={'single_host_origin'} */}
+{/* /> */}
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>
