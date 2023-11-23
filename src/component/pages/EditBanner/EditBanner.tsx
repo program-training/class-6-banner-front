@@ -120,13 +120,13 @@ const EditBanner: React.FC = () => {
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Edit Banner</Typography>
             <Box component="form" sx={{ backgroundColor: "#f9f9f9", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
                 <InputLabel htmlFor="id">ID:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     {...register('id')}
                     error={!!errors.id}
                     helperText={errors.id?.message}
                 />
                 <InputLabel htmlFor="image.url">Image URL:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     type='file'
                     {...register('image.url')}
                     onChange={onImageChange}
@@ -134,46 +134,45 @@ const EditBanner: React.FC = () => {
                     helperText={errors.image?.url?.message}
                 />
                 <InputLabel htmlFor="image.alt">Alt:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     {...register('image.alt')}
                     error={!!errors.image?.alt}
                     helperText={errors.image?.alt?.message}
                 />
                 <InputLabel htmlFor="text">Text:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     {...register('text')}
                     error={!!errors.text}
                     helperText={errors.text?.message}
                 />
                 <InputLabel htmlFor="createAt">Create at:</InputLabel>
-                <TextField className='formField'
-                    sx={{ width: "222px" }}
+                <TextField className='formField' sx={{marginBottom: "15px", width: "222px"}}
                     {...register('createAt')}
                     error={!!errors.createAt}
                     helperText={errors.createAt?.message}
                 />
                 <InputLabel htmlFor="author">Author:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     {...register('author')}
                     error={!!errors.author}
                     helperText={errors.author?.message}
                 />
                 <InputLabel htmlFor="rating">Rating:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     type='number'
                     {...register('rating')}
                     error={!!errors.rating}
                     helperText={errors.rating?.message}
                 />
                 <InputLabel htmlFor="sale">Sale:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     type='number'
                     {...register('sale')}
                     error={!!errors.sale}
                     helperText={errors.sale?.message}
                 />
                 <InputLabel htmlFor="category">Category:</InputLabel>
-                <TextField className='formField'
+                <TextField className='formField' sx={{marginBottom: "15px"}}
                     {...register('category')}
                     error={!!errors.category}
                     helperText={errors.category?.message}
