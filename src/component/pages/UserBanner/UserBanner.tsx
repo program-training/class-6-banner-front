@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Banner } from "../../interface";
 import axios from "axios";
 import Header from "./Header";
+const api = import.meta.env.VITE_MY_SERVER;
+
 
 export default function UserBanners() {
   const Navigate = useNavigate();
@@ -12,7 +14,7 @@ export default function UserBanners() {
   useEffect(() => {
     async function fetchBanners() {
       try {
-        const response = await axios.get("http://localhost:8008/api/banners");
+        const response = await axios.get(`${api}/api/banners`);
         setBanners(response.data);
       } catch (error) {
         console.error("Error fetching banners:", error);
@@ -23,7 +25,7 @@ export default function UserBanners() {
   }, []);
   const deleteBanner = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:8008/api/banners/${id}`);
+      await axios.delete(`${api}/api/banners/${id}`);
       setBanners(banners.filter((banner) => banner._id !== id));
     } catch (error) {
       console.error("Error deleting banner:", error);

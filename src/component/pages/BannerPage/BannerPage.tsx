@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
 import { Banner } from '../../interface';
+const api = import.meta.env.VITE_MY_SERVER;
+
+
 
 
 export default function BannerPage() {
@@ -15,7 +18,7 @@ export default function BannerPage() {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get(`http://localhost:8008/api/banners/${id}`);
+        const response = await axios.get(`${api}/api/banners/${id}`);
         setBanner(response.data);
       } catch (error) {
         console.error('Error fetching banner:', error);

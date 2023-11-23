@@ -4,6 +4,8 @@ import { Product } from "../../interface";
 import ProductCard from "../../mui/CardProduct";
 import { Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
+const store = import.meta.env.VITE_STORE_SERVER;
+
 
 export default function  AllProduct(){
 
@@ -14,7 +16,7 @@ export default function  AllProduct(){
       const fetchData = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/products"
+          `  ${store}/api/products`
           );
           setData(response.data);
         } catch (error) {

@@ -6,6 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import '../addBanner/AddBanner.css';
+const api = import.meta.env.VITE_MY_SERVER;
+
 
 interface BannerFormData {
     _id: string;
@@ -56,7 +58,7 @@ const EditBanner: React.FC = () => {
     useEffect(() => {
         const fetchBanner = async () => {
             try {
-                const response = await axios.get(`http://localhost:8008/api/banners/${id}`)
+                const response = await axios.get(`${api}/api/banners/${id}`)
                 const bannerData = response.data;
                 setValue('id', bannerData.id);
                 setValue('image.url', bannerData.image?.url);
