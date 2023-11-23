@@ -76,7 +76,7 @@ export default function UserBanners() {
               <CardActions sx={{ justifyContent: "center" }}>
                 <Button
                   onClick={(e) => {
-                    e.stopPropagation(), Navigate("/editBanner/${card._id}");
+                    e.stopPropagation(), Navigate(`/editBanner/${card._id}`);
                   }}
                   size="small"
                   color="primary"
