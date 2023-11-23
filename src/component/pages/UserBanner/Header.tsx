@@ -1,9 +1,18 @@
-import {AppBar, Toolbar,Button, Stack,Typography,styled,InputBase,alpha,} from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Stack,
+  Typography,
+  styled,
+  InputBase,
+  alpha,
+} from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-
+import { Logout } from "@mui/icons-material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -37,50 +46,84 @@ const InputBaseStyled = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Header() {
-    const userName = localStorage.getItem("username");
-    const Navigate = useNavigate();
-  
-    const homePage = () => {
-      Navigate(`/userBanners`);
-    };
-  
-    const handleSignOut = () => {
-      localStorage.setItem("username", JSON.stringify(""));
-      Navigate("/");
-    };
-  
-    const handleAddBanner = () => {
-      Navigate("/allProduct");
-    };
-  
-    return (
-      <AppBar position="sticky" sx={{ backgroundColor: "black" }}>
-        <Toolbar>
-          <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", flexGrow: 1 }}>
-            <Button onClick={handleSignOut} sx={{ color: "white" }}>
-              Sign Out
-            </Button>
-          </Stack>
-  
-          <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", marginX: 2 }}>
-            <Stack direction="row" spacing={3}>
-              <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
-            </Stack>
-  
-            <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", color: "white" }}>
-              <AccountCircleIcon />
-              <Typography variant="h6">{JSON.parse(userName!)}</Typography>
-            </Stack>
-          </Stack>
-          <Button onClick={handleAddBanner} sx={{ color: "white" }}>
-            ADD BANNER
-          </Button>
-  
-          <Search>
+  const userName = localStorage.getItem("username");
+  const Navigate = useNavigate();
+
+  const homePage = () => {
+    Navigate(`/userBanners`);
+  };
+
+  const handleSignOut = () => {
+    localStorage.setItem("username", JSON.stringify(""));
+    Navigate("/");
+  };
+
+  const handleAddBanner = () => {
+    Navigate("/allProduct");
+  };
+
+  return (
+    <AppBar position="sticky" sx={{ backgroundColor: "black" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Stack
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            color: "white",
+            flexGrow: 1,
+          }}
+        >
+          <AccountCircleIcon />
+          <Typography variant="h6" sx={{ marginLeft: "0.5rem" }}>
+            {JSON.parse(userName!)}
+          </Typography>
+        </Stack>
+
+        <Typography
+          variant="h5"
+          noWrap
+          component="a"
+          href="#app-bar-with-responsive-menu"
+          sx={{
+            mr: 2,
+            display: { md: "flex" },
+            flexGrow: 1,
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".3rem",
+            color: "inherit",
+            textDecoration: "none",
+            cursor: "pointer",
+            marginLeft: "15rem"
+          }}
+        >
+          BANNERS
+        </Typography>
+
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Search sx={{ flexGrow: 1 }}>
             <SearchIcon sx={{ color: "white" }} />
             <InputBaseStyled placeholder="Search…" />
           </Search>
-        </Toolbar>
-      </AppBar>
-    );
-  }
+
+          <Button variant="outlined" onClick={handleAddBanner} style={{ borderColor: 'white', color: 'white',marginLeft: ".5rem" }}>ADD BANNER</Button>
+          <Stack
+            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+          >
+            <Button onClick={handleSignOut} sx={{ color: "white",borderColor: 'white' }}>
+              <Logout />
+            </Button>
+          </Stack>
+          <Stack
+            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+          >
+            <Stack direction="row" spacing={3}>
+              <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
+            </Stack>
+          </Stack>
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
+}
