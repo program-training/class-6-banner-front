@@ -26,11 +26,8 @@ interface BannerFormData {
 }
 
 const schema = yup.object().shape({
-
-
-    id: yup.number(),
     image: yup.object().shape({
-        url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
+        url: yup.mixed() as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
     }),
     text: yup.string().required('Text is required'),
@@ -42,9 +39,10 @@ const schema = yup.object().shape({
 });
 
 const EditBanner: React.FC = () => {
-    const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(null);
+    const [createAt, setCreateAt] = useState(new Date());
     const [status, setStatus] = useState('');
     const [imagePreview, setImagePreview] = useState('');
+    const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(imagePreview);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { id } = useParams();
 
@@ -64,11 +62,9 @@ const EditBanner: React.FC = () => {
                 const response = await axios.get(`${api}/api/banners/${id}`)
                 const bannerData = response.data;
                 setImagePreview(bannerData.image.url)
-                setValue('id', bannerData.id);
                 setValue('image.url', bannerData.image?.url);
                 setValue('image.alt', bannerData.image?.alt);
                 setValue('text', bannerData.text);
-                setValue('createAt', new Date());
                 setValue('author', bannerData.author);
                 setValue('rating', bannerData.rating);
                 setValue('sale', bannerData.sale);
@@ -106,7 +102,7 @@ const EditBanner: React.FC = () => {
             const requestData = {
                 "id": data.id,
                 "image": {
-                    "url": imageBase64,
+                    "url": imageBase64 === "" ? imagePreview : imageBase64,
                     "alt": data.image.alt,
                 },
                 "text": data.text,
@@ -119,6 +115,7 @@ const EditBanner: React.FC = () => {
             };
             const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData);
             if (response.status < 210) {
+                console.log(imageBase64);
                 console.log('Banner updated successfully');
                 setStatus('Banner updated successfully!');
             } else {
@@ -133,13 +130,7 @@ const EditBanner: React.FC = () => {
     return (
         <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Edit Banner</Typography>
-            <Box component="form" sx={{ backgroundColor: "#f9f9f9", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
-                <InputLabel htmlFor="id">ID:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
-                    {...register('id')}
-                    error={!!errors.id}
-                    helperText={errors.id?.message}
-                />
+            <Box component="form" sx={{ backgroundColor: "#f2f2f2e8", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
                 <InputLabel htmlFor="img">Current image:</InputLabel>
                 <CardMedia
                     component="img"
@@ -148,7 +139,7 @@ const EditBanner: React.FC = () => {
                     image={imagePreview}
                     sx={{ marginBottom: "15px", maxWidth: "222px" }}
                 />
-                <TextField className='formField' sx={{ marginBottom: "15px", display: "none" }}
+                <TextField className='formField' sx={{ marginBottom: "15px", display: "none"}}
                     type='file'
                     {...register('image.url')}
                     onChange={onImageChange}
@@ -156,7 +147,7 @@ const EditBanner: React.FC = () => {
                     helperText={errors.image?.url?.message}
                     inputRef={fileInputRef}
                 />
-                <InputLabel htmlFor="image.url">
+                <InputLabel htmlFor="image.url" sx={{marginBottom: "15px"}}>
                     <Button onClick={handleReplaceImageClick} variant="contained">Replace the image</Button>
                 </InputLabel>
                 <InputLabel htmlFor="image.alt">Alt:</InputLabel>
@@ -173,9 +164,13 @@ const EditBanner: React.FC = () => {
                 />
                 <InputLabel htmlFor="createAt">Create at:</InputLabel>
                 <TextField className='formField' sx={{ marginBottom: "15px", width: "222px" }}
+                    type='date'
                     {...register('createAt')}
                     error={!!errors.createAt}
                     helperText={errors.createAt?.message}
+                    onChange={(e) => setCreateAt(new Date(e.target.value))}
+                    InputLabelProps={{ shrink: true }}
+                    value={createAt.toISOString().split('T')[0]}
                 />
                 <InputLabel htmlFor="author">Author:</InputLabel>
                 <TextField className='formField' sx={{ marginBottom: "15px" }}

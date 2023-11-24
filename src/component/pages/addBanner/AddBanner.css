@@ -6,8 +6,5 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.formField {
-    margin-bottom: 15px;
+  background-color: #f9f9f9
 }
