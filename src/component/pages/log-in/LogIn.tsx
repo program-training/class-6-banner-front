@@ -9,6 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "./functions";
+const api = import.meta.env.VITE_MY_SERVER;
 
 export default function LogIn() {
   const ls = localStorage.getItem("email")
@@ -22,7 +23,7 @@ export default function LogIn() {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
       try {
         const response = await axios.post(
-          "http://localhost:8008/api/users/login",
+          `${api}/api/users/login`,
           userData
         );
         if (response.data) {
@@ -51,7 +52,10 @@ export default function LogIn() {
           Navigate('/userBanners')
         }
 
-      } catch (error) {
+      // } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error:any) {
+        window.alert(error.response.data.message)
         console.error("Error during registration:", error);
       }
     } else if (validateEmail(userData.email) && !validatePassword(userData.password)) {

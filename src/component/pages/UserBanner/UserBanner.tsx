@@ -15,6 +15,10 @@ import axios from "axios";
 import Header from "./Header";
 import Footer from "./Footer";
 
+
+
+
+
 export default function UserBanners() {
   const navigate = useNavigate();
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -30,6 +34,7 @@ export default function UserBanners() {
     async function fetchBanners() {
       try {
         const response = await axios.get<Banner[]>("http://localhost:8008/api/banners", options);
+        // const response = await axios.get(`${api}/api/banners`);
         setBanners(response.data);
       } catch (error) {
         console.error("Error fetching banners:", error);
@@ -49,6 +54,7 @@ export default function UserBanners() {
     
     try {
       await axios.delete(`http://localhost:8008/api/banners/${id}`, options);
+      // await axios.delete(`${api}/api/banners/${id}`);
       setBanners(banners.filter((banner) => banner._id !== id));
     } catch (error) {
       console.error("Error deleting banner:", error);

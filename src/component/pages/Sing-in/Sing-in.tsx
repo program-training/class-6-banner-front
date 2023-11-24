@@ -9,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const api = import.meta.env.VITE_MY_SERVER;
 
 
 export default function SignIn() {
@@ -42,14 +43,15 @@ export default function SignIn() {
       try {
         console.log(user);
         const response = await axios.post(
-          "http://localhost:8008/api/users/register",
+        ` ${api}/api/users/register`,
           user
         );
         if(response){
           Navigate("/")
         }
         }
-      catch (error) {
+      catch (error:any) {
+        window.alert(error.response.data.message)
         console.error("Error during registration:", error);
       }
     }
