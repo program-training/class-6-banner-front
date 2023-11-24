@@ -20,12 +20,6 @@ export default function UserBanners() {
   const [banners, setBanners] = useState<Banner[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
 
     async function fetchBanners() {
       try {
