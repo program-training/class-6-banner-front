@@ -25,7 +25,7 @@ interface BannerFormData {
 
 const schema = yup.object().shape({
     // _id: yup.string().required('ID is required'),
-    id:yup.number(),
+    id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
@@ -42,7 +42,7 @@ const EditBanner: React.FC = () => {
     const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
     const { id } = useParams();
-    console.log("id+ "+id);
+    console.log("id+ " + id);
 
     const {
         register,
@@ -105,7 +105,18 @@ const EditBanner: React.FC = () => {
                 "category": data.category,
                 "productID": data.productID,
             };
-            const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData);
+            // קריאה לטוקן מ-LocalStorage
+          
+            const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+
+            const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData, options);
+            // המשך הקוד שלך...
+
             if (response.status < 210) {
                 console.log('Banner updated successfully');
                 setStatus('Banner updated successfully!');

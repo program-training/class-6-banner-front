@@ -37,7 +37,7 @@ const InputBaseStyled = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Header() {
-    const userName = localStorage.getItem("username");
+    const username = localStorage.getItem("username");
     const Navigate = useNavigate();
   
     const homePage = () => {
@@ -69,7 +69,7 @@ export default function Header() {
   
             <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", color: "white" }}>
               <AccountCircleIcon />
-              <Typography variant="h6">{JSON.parse(userName!)}</Typography>
+              <Typography variant="h6">{JSON.parse(username!)}</Typography>
             </Stack>
           </Stack>
           <Button onClick={handleAddBanner} sx={{ color: "white" }}>
