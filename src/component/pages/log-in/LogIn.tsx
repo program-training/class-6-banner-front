@@ -52,8 +52,6 @@ export default function LogIn() {
           Navigate('/userBanners')
         }
 
-      // } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error:any) {
         window.alert(error.response.data.message)
         console.error("Error during registration:", error);
