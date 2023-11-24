@@ -11,13 +11,25 @@ const api = import.meta.env.VITE_MY_SERVER;
 
 
 
+
+
+
+
 export default function UserBanners() {
   const navigate = useNavigate();
   const [banners, setBanners] = useState<Banner[]>([]);
 
   useEffect(() => {
+    const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
     async function fetchBanners() {
       try {
+
         const response = await axios.get(`${api}/api/banners`);
         setBanners(response.data);
       } catch (error) {
@@ -29,8 +41,17 @@ export default function UserBanners() {
   }, []);
 
   const deleteBanner = async (id: string) => {
+    const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    
     try {
-      await axios.delete(`${api}/api/banners/${id}`);
+
+      await axios.delete(`${api}/api/banners/${id}`, options);
+
       setBanners(banners.filter((banner) => banner._id !== id));
     } catch (error) {
       console.error("Error deleting banner:", error);
@@ -40,12 +61,12 @@ export default function UserBanners() {
   return (
     <Container sx={{ padding: "2rem", maxWidth: "1200px", marginTop: "8px", backgroundColor: '#f4f4f4' }}>
       <Header />
-      <Typography 
-        variant="h4" 
-        gutterBottom 
-        sx={{ 
-          fontWeight: "bold", 
-          marginBottom: "2rem", 
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          marginBottom: "2rem",
           textAlign: "center",
           color: "#00796b", // Dark teal color for the title
           marginTop: "20px"
@@ -53,12 +74,12 @@ export default function UserBanners() {
       >
         User Banners
       </Typography>
-      <div 
-        style={{ 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          gap: '20px', 
-          justifyContent: 'center', 
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '20px',
+          justifyContent: 'center',
           marginBottom: "3rem"
         }}
       >
@@ -84,7 +105,7 @@ export default function UserBanners() {
             >
               <CardMedia
                 component="img"
-                sx={{ 
+                sx={{
                   height: '340px',
                   objectFit: 'contain'
                 }}
@@ -126,9 +147,9 @@ export default function UserBanners() {
       <Footer />
     </Container>
   );
-  
-  
-  
-  
-  
+
+
+
+
+
 }

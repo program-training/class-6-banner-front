@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Box, Button, TextField, Typography, InputLabel, CardMedia } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,7 +14,7 @@ const api = import.meta.env.VITE_MY_SERVER;
 interface BannerFormData {
     id: number;
     image: {
-        url:  File | null;
+        url: File | null;
         alt: string;
     };
     text: string;
@@ -29,7 +29,7 @@ interface BannerFormData {
 const schema = yup.object().shape({
     id: yup.number().required('ID is required'),
     image: yup.object().shape({
-        url:yup.mixed().required('Image is required') as yup.Schema<File | null>,
+        url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
     }),
     text: yup.string().required('Text is required'),
@@ -44,7 +44,10 @@ const AddBanner: React.FC = () => {
     const Navigate = useNavigate()
     const [image, setImage] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
-    const {id } = useParams();
+    const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+    const [createAt, setCreateAt] = useState(new Date());
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { id } = useParams();
 
     const {
         register,
@@ -58,17 +61,31 @@ const AddBanner: React.FC = () => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-          setImage(reader.result);
+            setImage(reader.result);
         };
     }
 
     const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
+            setUploadedImage(e.target.files[0]);
             getBase64(e.target.files[0]);
         }
     }
-    
+
+    const handleReplaceImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
     const onSubmit: SubmitHandler<BannerFormData> = async (data) => {
+        const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+        const options = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+    
         try {
             const requestData = {
                 "id": data.id,
@@ -84,7 +101,10 @@ const AddBanner: React.FC = () => {
                 "category": data.category,
                 "productID": id,
             };
-            const response = await axios.post(`${api}/api/banners`, requestData);
+
+            const response = await axios.post(`${api}/api/banners`, requestData, options);
+
+            
             if (response.status < 210) {
                 console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
@@ -97,66 +117,83 @@ const AddBanner: React.FC = () => {
             console.error('Error:', error);
         }
     };
+    
+    
 
     return (
         <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Add New Banner</Typography>
-            <Box component="form" sx={{ backgroundColor: "#f9f9f9", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
-                <TextField className='formField'
+            <Box component="form" sx={{ backgroundColor: "#f2f2f2e8", padding: "20px", paddingLeft: "85px", borderRadius: "8px" }} onSubmit={handleSubmit(onSubmit)}>
+                <TextField className='formField' sx={{ marginBottom: "20px", backgroundColor: "#f9f9f9" }}
                     label="ID:"
                     {...register('id')}
                     error={!!errors.id}
                     helperText={errors.id?.message}
                 />
-                <TextField className='formField'
+                { uploadedImage ? (
+                <CardMedia
+                    component="img"
+                    alt="No photo added"
+                    height="140"
+                    image={(image || (uploadedImage ? URL.createObjectURL(uploadedImage) : '')) as string}
+                    sx={{ marginBottom: "15px", maxWidth: "222px" }}
+                />) : null}
+                <TextField className='formField' sx={{ marginBottom: "5px", backgroundColor: "#f9f9f9", display: "none" }}
                     type='file'
                     label="Upload image"
                     {...register('image.url')}
                     onChange={onImageChange}
                     error={!!errors.image?.url}
                     helperText={errors.image?.url?.message}
+                    inputRef={fileInputRef}
                 />
-                <TextField className='formField'
+                <InputLabel htmlFor="image.url" sx={{ marginBottom: "5px" }}>
+                    <Button onClick={handleReplaceImageClick} variant="contained">
+                        Add image
+                    </Button>
+                </InputLabel>
+                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     label="Alt"
                     {...register('image.alt')}
                     error={!!errors.image?.alt}
                     helperText={errors.image?.alt?.message}
                 />
-                <TextField className='formField'
+                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     label="Text:"
                     {...register('text')}
                     error={!!errors.text}
                     helperText={errors.text?.message}
                 />
-                <TextField className='formField'
-                    sx={{ width: "222px" }}
+                <TextField className='formField' sx={{ width: "222px", marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     type='date'
-                    label="Create at:"
-                    {...register('createAt')}
+                    {...register('createAt', { value: createAt })}
                     error={!!errors.createAt}
                     helperText={errors.createAt?.message}
+                    onChange={(e) => setCreateAt(new Date(e.target.value))}
+                    InputLabelProps={{ shrink: true }}
+                    value={createAt.toISOString().split('T')[0]}
                 />
-                <TextField className='formField'
+                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     label="Author:"
                     {...register('author')}
                     error={!!errors.author}
                     helperText={errors.author?.message}
                 />
-                <TextField className='formField'
+                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     type='number'
                     label="Rating:"
                     {...register('rating')}
                     error={!!errors.rating}
                     helperText={errors.rating?.message}
                 />
-                <TextField className='formField'
+                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     type='number'
                     label="sale"
                     {...register('sale')}
                     error={!!errors.sale}
                     helperText={errors.sale?.message}
                 />
-                <TextField className='formField'
+                <TextField className='formField' sx={{ marginBottom: "15px", backgroundColor: "#f9f9f9" }}
                     label="category"
                     {...register('category')}
                     error={!!errors.category}

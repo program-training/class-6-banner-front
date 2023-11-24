@@ -16,9 +16,9 @@ export default function LogIn() {
   const Navigate = useNavigate()
   const [userData, setUserData] = React.useState({
     email: ls ? JSON.parse(ls) : "",
-    password:'',
+    password: '',
   });
- 
+
   const handleLogIn = async () => {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
       try {
@@ -26,11 +26,32 @@ export default function LogIn() {
           `${api}/api/users/login`,
           userData
         );
-        if (response.data) {      
-          localStorage.setItem('username',JSON.stringify(response.data.username))
+        if (response.data) {
+          console.log(response.data);
+
+          localStorage.setItem('username', JSON.stringify(response.data.user.username))
+          localStorage.setItem('token', JSON.stringify(response.data.token))
+          const storedToken = localStorage.getItem('token');
+          const storedUsername = localStorage.getItem('username');
+          
+          if (storedUsername) {
+              try {
+                  const username = JSON.parse(storedUsername);
+                  console.log('Stored Username:', username);
+              } catch (error) {
+                  console.error('Error parsing stored username:', error);
+              }
+          }
+          else{
+            console.log('No stored username');
+          }
+          if (storedToken) {
+            console.log('Stored Token:', JSON.parse(storedToken));
+          }
+
           Navigate('/userBanners')
         }
-        
+
       } catch (error:any) {
         window.alert(error.response.data.message)
         console.error("Error during registration:", error);
@@ -47,14 +68,16 @@ export default function LogIn() {
   };
 
   const forgetPassword = () => {
-    localStorage.setItem('email',JSON.stringify(userData.email))
+    localStorage.setItem('email', JSON.stringify(userData.email))
     Navigate("/forgetPassword")
   };
 
   return (
     <React.Fragment >
-      <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
-          backgroundSize: 'cover'}} open={true} >
+      <Dialog sx={{
+        backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
+        backgroundSize: 'cover'
+      }} open={true} >
         <DialogTitle>Log in</DialogTitle>
         <DialogContent>
           <DialogContentText>

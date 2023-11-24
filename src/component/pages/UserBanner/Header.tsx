@@ -113,6 +113,7 @@ export default function Header() {
           >
             <Button onClick={handleSignOut} sx={{ color: "white",borderColor: 'white' }}>
               <Logout />
+
             </Button>
           </Stack>
           <Stack
@@ -121,6 +122,8 @@ export default function Header() {
             <Stack direction="row" spacing={3}>
               <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
             </Stack>
+
+
           </Stack>
         </div>
       </Toolbar>
