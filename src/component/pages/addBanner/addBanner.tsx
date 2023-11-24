@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import './AddBanner.css';
 import { useNavigate, useParams } from 'react-router-dom';
+// import Header from '../UserBanner/Header';
 
 const api = import.meta.env.VITE_MY_SERVER;
 
