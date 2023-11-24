@@ -26,6 +26,7 @@ interface BannerFormData {
 }
 
 const schema = yup.object().shape({
+    id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed() as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
@@ -113,7 +114,22 @@ const EditBanner: React.FC = () => {
                 "category": data.category,
                 "productID": data.productID,
             };
-            const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData);
+            // קריאה לטוקן מ-LocalStorage
+         
+            const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+            const options = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+
+
+
+            // שליחת הבקשה עם axios
+            const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData, options);
+
+            // המשך הקוד שלך...
+
             if (response.status < 210) {
                 console.log(imageBase64);
                 console.log('Banner updated successfully');

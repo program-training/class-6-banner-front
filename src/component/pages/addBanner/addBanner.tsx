@@ -78,6 +78,13 @@ const AddBanner: React.FC = () => {
     };
 
     const onSubmit: SubmitHandler<BannerFormData> = async (data) => {
+        const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
+        const options = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+    
         try {
             const requestData = {
                 "id": data.id,
@@ -93,7 +100,10 @@ const AddBanner: React.FC = () => {
                 "category": data.category,
                 "productID": id,
             };
-            const response = await axios.post(`${api}/api/banners`, requestData);
+
+            const response = await axios.post(`${api}/api/banners`, requestData, options);
+
+            
             if (response.status < 210) {
                 console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
@@ -106,6 +116,8 @@ const AddBanner: React.FC = () => {
             console.error('Error:', error);
         }
     };
+    
+    
 
     return (
         <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
