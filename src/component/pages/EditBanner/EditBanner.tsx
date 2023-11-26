@@ -11,17 +11,14 @@ import { schema } from './schema';
 const api = import.meta.env.VITE_MY_SERVER;
 
 const EditBanner: React.FC = () => {
+
   const [createAt, setCreateAt] = useState(new Date());
   const [status, setStatus] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-//   const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(
-//     imagePreview
-//   );
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { id } = useParams();
   const Navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -30,7 +27,6 @@ const EditBanner: React.FC = () => {
   } = useForm<BannerFormData>({
     resolver: yupResolver(schema),
   });
-
   useEffect(() => {
     const fetchBanner = async () => {
       try {
@@ -51,15 +47,7 @@ const EditBanner: React.FC = () => {
     };
     fetchBanner();
   }, [id, setValue]);
-
-//   const getBase64 = (file: File) => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => {
-//       setImageBase64(reader.result);
-//     };
-//   };
-
+  
   const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
         const imageUrl = await uploadImageToCloudinary(e.target.files[0]);
@@ -68,14 +56,11 @@ const EditBanner: React.FC = () => {
         }
     }
 };
-
-
   const handleReplaceImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-
   const onSubmit: SubmitHandler<BannerFormData> = async (data) => {
     try {
       setLoading(true);
@@ -93,20 +78,17 @@ const EditBanner: React.FC = () => {
         category: data.category,
         productID: data.productID,
       };
-
       const token = localStorage.getItem("token")?.replace(/^"|"$/g, "");
       const options = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-
       const response = await axios.put(
         `${api}/api/banners/${id}`,
         requestData,
         options
       );
-
       if (response.status < 210) {
         setStatus("Banner updated successfully!");
         Navigate("/userBanners");
@@ -127,7 +109,6 @@ const EditBanner: React.FC = () => {
     const formData = new FormData();
     formData.append('file', imageFile);
     formData.append('upload_preset', preset_key);
-
     try {
         const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
         return response.data.url; // החזרת ה-URL של התמונה המועלת
@@ -135,7 +116,6 @@ const EditBanner: React.FC = () => {
         console.error('Error uploading the image: ', error);
     }
 };
-
   return (
       <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
         <Typography sx={{ textAlign: "center", fontSize: "30px" }}>
@@ -159,7 +139,6 @@ const EditBanner: React.FC = () => {
             image={imagePreview}
             sx={{ marginBottom: "15px", maxWidth: "222px" }}
           />
-
           <TextField
             sx={{ marginBottom: "15px", display: "none" }}
             type="file"
@@ -247,5 +226,4 @@ const EditBanner: React.FC = () => {
       </Box>
   );
 };
-
 export default EditBanner;
