@@ -89,6 +89,7 @@ const EditBanner: React.FC = () => {
     const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             getBase64(e.target.files[0]);
+            setImagePreview(URL.createObjectURL(e.target.files[0]));
         }
     }
 
@@ -114,7 +115,6 @@ const EditBanner: React.FC = () => {
                 "category": data.category,
                 "productID": data.productID,
             };
-            // קריאה לטוקן מ-LocalStorage
          
             const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
             const options = {
@@ -123,13 +123,7 @@ const EditBanner: React.FC = () => {
                 }
             };
 
-
-
-            // שליחת הבקשה עם axios
             const response = await axios.put(`http://localhost:8008/api/banners/${id}`, requestData, options);
-
-            // המשך הקוד שלך...
-
             if (response.status < 210) {
                 console.log(imageBase64);
                 console.log('Banner updated successfully');
@@ -155,7 +149,7 @@ const EditBanner: React.FC = () => {
                     image={imagePreview}
                     sx={{ marginBottom: "15px", maxWidth: "222px" }}
                 />
-                <TextField className='formField' sx={{ marginBottom: "15px", display: "none"}}
+                <TextField sx={{ marginBottom: "15px", display: "none"}}
                     type='file'
                     {...register('image.url')}
                     onChange={onImageChange}
@@ -166,20 +160,22 @@ const EditBanner: React.FC = () => {
                 <InputLabel htmlFor="image.url" sx={{marginBottom: "15px"}}>
                     <Button onClick={handleReplaceImageClick} variant="contained">Replace the image</Button>
                 </InputLabel>
-                <InputLabel htmlFor="image.alt">Alt:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
+                <TextField sx={{ marginBottom: "15px" }}
+                    label="Alt:"
                     {...register('image.alt')}
                     error={!!errors.image?.alt}
                     helperText={errors.image?.alt?.message}
+                    InputLabelProps={{ shrink: true }}
                 />
-                <InputLabel htmlFor="text">Text:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
+                <TextField sx={{ marginBottom: "15px" }}
+                    label="Text:"
                     {...register('text')}
                     error={!!errors.text}
                     helperText={errors.text?.message}
+                    InputLabelProps={{ shrink: true }}
                 />
-                <InputLabel htmlFor="createAt">Create at:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px", width: "222px" }}
+                <TextField sx={{ marginBottom: "15px", width: "222px" }}
+                    label="Create at:"
                     type='date'
                     {...register('createAt')}
                     error={!!errors.createAt}
@@ -188,31 +184,35 @@ const EditBanner: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     value={createAt.toISOString().split('T')[0]}
                 />
-                <InputLabel htmlFor="author">Author:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
+                <TextField sx={{ marginBottom: "15px" }}
+                    label="Author:"
                     {...register('author')}
                     error={!!errors.author}
                     helperText={errors.author?.message}
+                    InputLabelProps={{ shrink: true }}
                 />
-                <InputLabel htmlFor="rating">Rating:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
+                <TextField sx={{ marginBottom: "15px" }}
+                    label="Rating:"
                     type='number'
                     {...register('rating')}
                     error={!!errors.rating}
                     helperText={errors.rating?.message}
+                    InputLabelProps={{ shrink: true }}
                 />
-                <InputLabel htmlFor="sale">Sale:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
+                <TextField sx={{ marginBottom: "15px" }}
+                    label="Sale:"
                     type='number'
                     {...register('sale')}
                     error={!!errors.sale}
                     helperText={errors.sale?.message}
+                    InputLabelProps={{ shrink: true }}
                 />
-                <InputLabel htmlFor="category">Category:</InputLabel>
-                <TextField className='formField' sx={{ marginBottom: "15px" }}
+                <TextField sx={{ marginBottom: "15px" }}
+                    label="Category:"
                     {...register('category')}
                     error={!!errors.category}
                     helperText={errors.category?.message}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <Button type='submit' variant="contained">
                     Edit Banner
