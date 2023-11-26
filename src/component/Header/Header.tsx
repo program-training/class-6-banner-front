@@ -1,18 +1,8 @@
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  Stack,
-  Typography,
-  styled,
-  InputBase,
-  alpha,
-} from "@mui/material";
+import {AppBar,Toolbar,Button,Stack,Typography,styled,InputBase,alpha,} from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-import { Logout } from "@mui/icons-material";
+import UserProfile from "./UserActions";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,12 +43,6 @@ export default function Header() {
   const homePage = () => {
     Navigate(`/userBanners`);
   };
-
-  const handleSignOut = () => {
-    localStorage.setItem("username", JSON.stringify(""));
-    Navigate("/");
-  };
-
   const handleAddBanner = () => {
     Navigate("/allProduct");
   };
@@ -75,13 +59,14 @@ export default function Header() {
             flexGrow: 1,
           }}
         >
-          <AccountCircleIcon />
+          <UserProfile />
           <Typography variant="h6" sx={{ marginLeft: "0.5rem" }}>
             {JSON.parse(userName!)}
           </Typography>
         </Stack>
 
         <Typography
+        onClick={homePage}
           variant="h5"
           noWrap
           component="a"
@@ -109,14 +94,7 @@ export default function Header() {
           </Search>
 
           <Button variant="outlined" onClick={handleAddBanner} style={{ borderColor: 'white', color: 'white',marginLeft: ".5rem" }}>ADD BANNER</Button>
-          <Stack
-            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-          >
-            <Button onClick={handleSignOut} sx={{ color: "white",borderColor: 'white' }}>
-              <Logout />
 
-            </Button>
-          </Stack>
           <Stack
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
           >
