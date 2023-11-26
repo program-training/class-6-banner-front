@@ -57,20 +57,24 @@ const AddBanner: React.FC = () => {
         resolver: yupResolver(schema),
     });
 
-    const getBase64 = (file: File) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            setImage(reader.result);
-        };
-    }
+    // const getBase64 = (file: File) => {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = () => {
+    //         setImage(reader.result);
+    //     };
+    // }
 
-    const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            setUploadedImage(e.target.files[0]);
-            getBase64(e.target.files[0]);
+            const imageUrl = await uploadImageToCloudinary(e.target.files[0]);
+            if (imageUrl) {
+                setImage(imageUrl); // עדכון הכתובת של התמונה
+                setUploadedImage(e.target.files[0]);
+            }
         }
-    }
+    };
+    
 
     const handleReplaceImageClick = () => {
         if (fileInputRef.current) {
@@ -90,7 +94,7 @@ const AddBanner: React.FC = () => {
             const requestData = {
                 "id": data.id,
                 "image": {
-                    "url": image,
+                    "url": image, // השתמש ב-URL של התמונה מ-Cloudinary
                     "alt": data.image.alt,
                 },
                 "text": data.text,
@@ -118,8 +122,22 @@ const AddBanner: React.FC = () => {
         }
     };
     
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const uploadImageToCloudinary = async (imageFile:any) => {
+        const preset_key = "ughivthg"; // החלף עם הערך האמיתי שלך
+        const cloudName = "dm7dutcrn"; // החלף עם הערך האמיתי שלך
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', preset_key);
     
-
+        try {
+            const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
+            return response.data.url; // החזרת ה-URL של התמונה המועלת
+        } catch (error) {
+            console.error('Error uploading the image: ', error);
+        }
+    };
+    
     return (
         <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Add New Banner</Typography>
