@@ -2,13 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Product } from "../../interface";
 import ProductCard from "../../mui/CardProduct";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 const store = import.meta.env.VITE_STORE_SERVER;
 
 export default function AllProduct() {
   const Navigate = useNavigate();
-  const [data, setData] = useState<Product[]>([]);
+  const [data, setData] = useState<Product[]>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +21,14 @@ export default function AllProduct() {
     };
     fetchData();
   }, []);
+
+  if (!data) {
+    return (
+      <div style={{minHeight:'50vh',display: "flex",alignItems: "center",justifyContent: "center",}}>
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <Box>
       <Typography sx={{ textAlign: "center", margin: "30px" }} variant="h3">
