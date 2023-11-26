@@ -9,19 +9,26 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { validateEmail, validatePassword } from "../log-in/functions";
 const api = import.meta.env.VITE_MY_SERVER;
 
 
 export default function SignIn() {
 
   const Navigate = useNavigate()
-  const [passwordVerification,setPasswordVerification] = React.useState('')
-  const [user,setUser] = React.useState({
+  const [passwordVerification, setPasswordVerification] = React.useState('')
+  const [user, setUser] = React.useState({
     username: "",
     email: "",
     password: "",
-    isAdmin:true
+    isAdmin: true
   })
+  const [errorMessages, setErrorMessages] = React.useState({
+    username: "",
+    email: "",
+    password: "",
+    passwordVerification: "",
+  });
 
   // const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
   //   console.log("Google Sign-In Success:", response);
@@ -32,25 +39,42 @@ export default function SignIn() {
   // };
 
   const handleRegistration = async () => {
-    localStorage.setItem('email',JSON.stringify(user.email))
+    localStorage.setItem('email', JSON.stringify(user.email))
+
+    const usernameError = user.username.length === 0 ? "Username is required" : "";
+    const emailError = validateEmail(user.email) ? "" : "Invalid email format";
+    const passwordError = validatePassword(user.password)
+      ? ""
+      : "Password must be at least 7 characters long, contain at least one lowercase letter, one uppercase letter, and one digit";
+    const passwordVerificationError =
+      user.password === passwordVerification
+        ? ""
+        : "Password verification does not match the password";
+
+    setErrorMessages({
+      username: usernameError,
+      email: emailError,
+      password: passwordError,
+      passwordVerification: passwordVerificationError,
+    });
 
     if (
-      user.password === passwordVerification &&
-      user.password.length > 0 &&
-      user.email.length > 0 &&
-      user.username.length > 0
+      !usernameError &&
+      !emailError &&
+      !passwordError &&
+      !passwordVerificationError
     ) {
       try {
         console.log(user);
         const response = await axios.post(
-        ` ${api}/api/users/register`,
+          ` ${api}/api/users/register`,
           user
         );
-        if(response){
+        if (response) {
           Navigate("/")
         }
-        }
-      catch (error:any) {
+      }
+      catch (error: any) {
         window.alert(error.response.data.message)
         console.error("Error during registration:", error);
       }
@@ -59,8 +83,10 @@ export default function SignIn() {
 
   return (
     <React.Fragment>
-      <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
-          backgroundSize: 'cover'}} open={true}  >
+      <Dialog sx={{
+        backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
+        backgroundSize: 'cover'
+      }} open={true}  >
         <DialogTitle>sign up</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -82,6 +108,8 @@ export default function SignIn() {
             fullWidth
             variant="standard"
             required
+            error={Boolean(errorMessages.username)}
+            helperText={errorMessages.username}
           />
           <TextField
             onChange={(e) => {
@@ -99,6 +127,8 @@ export default function SignIn() {
             fullWidth
             variant="standard"
             required
+            error={Boolean(errorMessages.email)}
+            helperText={errorMessages.email}
           />
           <TextField
             onChange={(e) => {
@@ -116,6 +146,8 @@ export default function SignIn() {
             fullWidth
             variant="standard"
             required
+            error={Boolean(errorMessages.password)}
+            helperText={errorMessages.password}
           />
           <TextField
             onChange={(e) => {
@@ -130,16 +162,18 @@ export default function SignIn() {
             fullWidth
             variant="standard"
             required
+            error={Boolean(errorMessages.passwordVerification)}
+            helperText={errorMessages.passwordVerification}
           />
         </DialogContent>
         <DialogActions>
-        {/* <GoogleLogin
+          {/* <GoogleLogin
   clientId="83361752716-l79sdsffgft1hpf7pfsiqrr5pki7d4de.apps.googleusercontent.com"
   buttonText="Sign in with Google"
   onSuccess={handleGoogleSignInSuccess}
   onFailure={handleGoogleSignInFailure}
   cookiePolicy={'single_host_origin'} */}
-{/* /> */}
+          {/* /> */}
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>
