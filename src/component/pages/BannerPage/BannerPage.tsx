@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
@@ -31,9 +32,12 @@ export default function BannerPage() {
   }, [id]);
 
   if (!banner) {
-    return <div>Loading...</div>;
+    return(   
+       <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+     <CircularProgress />
+     <h4>Loading...</h4>
+    </div>)
   }
-
   return (
     <Container  sx={{ display:'flex', justifyContent:'center',margin:'3rem' }}>
     <Card sx={{backgroundColor: '#f5f5f5',width: '90%',margin: '0 auto', maxWidth: '90rem', boxShadow: 3, display:'flex',justifyContent:'space-between'}}> {/* שינוי גודל הכרטיס */}

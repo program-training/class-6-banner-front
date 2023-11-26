@@ -48,6 +48,7 @@ const InputBaseStyled = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const userName = localStorage.getItem("username");
   const Navigate = useNavigate();
+  if (!userName) {Navigate('/')}
 
   const homePage = () => {
     Navigate(`/userBanners`);
@@ -63,7 +64,7 @@ export default function Header() {
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "black" }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "black"  }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Stack
           sx={{

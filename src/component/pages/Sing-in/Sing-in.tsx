@@ -61,7 +61,7 @@ export default function SignIn() {
     <React.Fragment>
       <Dialog sx={{backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
           backgroundSize: 'cover'}} open={true}  >
-        <DialogTitle>sing in</DialogTitle>
+        <DialogTitle>sign up</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To register please enter email and password.
