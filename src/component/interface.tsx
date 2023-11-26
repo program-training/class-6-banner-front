@@ -15,6 +15,22 @@ export interface Banner {
 }
 
 
+export interface BannerFormData {
+
+  id?: number;
+  image: {
+      url: File | null;
+      alt: string;
+  };
+  text: string;
+  createAt: Date;
+  author: string;
+  rating: number;
+  sale: number;
+  category: string;
+  productID?: number;
+}
+
 export interface User {
     _id?:string
   username: string;
