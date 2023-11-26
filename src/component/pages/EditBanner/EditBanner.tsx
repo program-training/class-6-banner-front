@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import '../addBanner/AddBanner.css';
 import { BannerFormData } from '../../interface';
 import { schema } from './schema';
-import Header from '../UserBanner/Header';
+// import Header from '../UserBanner/Header';
 
 const api = import.meta.env.VITE_MY_SERVER;
 
