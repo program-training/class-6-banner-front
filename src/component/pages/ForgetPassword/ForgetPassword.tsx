@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle"; import React from "react";
 import { useState } from "react"
-import { validatePassword } from "../log-in/functions";
+import { validatePassword, validateEmail } from "../log-in/functions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const api = import.meta.env.VITE_MY_SERVER;
@@ -38,6 +38,10 @@ export default function ForgetPassword() {
       return;
     }
 
+    if (!validateEmail(obj.email)) {
+      setEmailError("Invalid email");
+    }
+
     if (!validatePassword(obj.newPassword)) {
       setPasswordError("Invalid password format");
       return;
@@ -57,8 +61,6 @@ export default function ForgetPassword() {
       else {
         window.alert('try again');
       }
-
-
     } catch (error: any) {
       if (error.response.data.message == "User not found") {
         window.alert("משתמש לא קיים");
