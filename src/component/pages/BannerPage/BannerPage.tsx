@@ -66,7 +66,7 @@ export default function BannerPage() {
                 component="div"
                 sx={{ marginY: "3rem" }}
               >
-                {banner.category}
+                {banner.image.alt}
               </Typography>
               <Typography
                 component="div"
@@ -75,6 +75,8 @@ export default function BannerPage() {
               >
                 {banner.text}
               </Typography>
+              <Typography variant="body2">Category: {banner.category}</Typography>
+
               <Typography variant="body2">Author: {banner.author}</Typography>
               <Typography variant="body2">Rating: {banner.rating}</Typography>
               {banner.sale && (
