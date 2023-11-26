@@ -16,7 +16,7 @@ const EditBanner: React.FC = () => {
     const [createAt, setCreateAt] = useState(new Date());
     const [status, setStatus] = useState('');
     const [imagePreview, setImagePreview] = useState('');
-    const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(imagePreview);
+    // const [imageBase64, setImageBase64] = useState<string | ArrayBuffer | null>(imagePreview);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { id } = useParams();
@@ -52,21 +52,24 @@ const EditBanner: React.FC = () => {
         fetchBanner();
     }, [id, setValue]);
 
-    const getBase64 = (file: File) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            setImageBase64(reader.result);
-        };
-    };
+    // const getBase64 = (file: File) => {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = () => {
+    //         setImageBase64(reader.result);
+    //     };
+    // };
 
-    const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            getBase64(e.target.files[0]);
-            setImagePreview(URL.createObjectURL(e.target.files[0]));
+            const imageUrl = await uploadImageToCloudinary(e.target.files[0]);
+            if (imageUrl) {
+                setImagePreview(imageUrl);
+                setValue('image.url', imageUrl); // עדכון הערך בטופס
+            }
         }
     };
-
+    
     const handleReplaceImageClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -79,7 +82,7 @@ const EditBanner: React.FC = () => {
             const requestData = {
                 "id": data.id,
                 "image": {
-                    "url": imageBase64 === "" ? imagePreview : imageBase64,
+                    "url": imagePreview, // השתמש ב-URL של התמונה מ-Cloudinary
                     "alt": data.image.alt,
                 },
                 "text": data.text,
@@ -114,7 +117,21 @@ const EditBanner: React.FC = () => {
             setLoading(false);
         }
     };
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const uploadImageToCloudinary = async (imageFile:any) => {
+        const preset_key = "ughivthg";
+        const cloudName = "dm7dutcrn";
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', preset_key);
+        try {
+            const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
+            return response.data.url; // החזרת ה-URL של התמונה
+        } catch (error) {
+            console.error('Error uploading the image: ', error);
+        }
+    };
+    
     return (
         <Box >
             <Header/>
