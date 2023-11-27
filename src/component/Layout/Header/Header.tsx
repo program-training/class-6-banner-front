@@ -1,4 +1,13 @@
-import {AppBar,Toolbar,Button,Stack,Typography,styled,InputBase,alpha,} from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Stack,
+  Typography,
+  styled,
+  InputBase,
+  alpha,
+} from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +47,6 @@ const InputBaseStyled = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const userName = localStorage.getItem("username");
   const Navigate = useNavigate();
-  if (!userName) {Navigate('/')}
 
   const homePage = () => {
     Navigate(`/userBanners`);
@@ -48,7 +56,7 @@ export default function Header() {
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "black"  }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "black" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Stack
           sx={{
@@ -66,7 +74,7 @@ export default function Header() {
         </Stack>
 
         <Typography
-        onClick={homePage}
+          onClick={homePage}
           variant="h5"
           noWrap
           component="a"
@@ -81,7 +89,7 @@ export default function Header() {
             color: "inherit",
             textDecoration: "none",
             cursor: "pointer",
-            marginLeft: "15rem"
+            marginLeft: "15rem",
           }}
         >
           BANNERS
@@ -92,17 +100,36 @@ export default function Header() {
             <SearchIcon sx={{ color: "white" }} />
             <InputBaseStyled placeholder="Search…" />
           </Search>
-
-          <Button variant="outlined" onClick={handleAddBanner} style={{ borderColor: 'white', color: 'white',marginLeft: ".5rem" }}>ADD BANNER</Button>
+          <Button
+            variant="outlined"
+            onClick={handleAddBanner}
+            sx={{
+              borderColor: "white",
+              color: "white",
+              marginLeft: ".5rem",
+              "&:hover": {
+                backgroundColor: "white",
+                color: "black"
+              },}}>
+            ADD BANNER
+          </Button>
 
           <Stack
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
           >
             <Stack direction="row" spacing={3}>
-              <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
+              <HomeOutlinedIcon
+                onClick={homePage}
+                sx={{
+                  color: "white",marginY:'10rem',
+                  "&:hover": {
+                    backgroundColor: "white",
+                    color: "black",
+                    borderRadius: "50%",
+                  },
+                }}
+              />
             </Stack>
-
-
           </Stack>
         </div>
       </Toolbar>
