@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import {
-  IconButton,Menu,MenuItem,Typography,useTheme} from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Popover, Typography, useTheme } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import EditUser from '../../pages/EditUser/EditUser';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const api = import.meta.env.VITE_MY_SERVER;
@@ -14,11 +14,14 @@ const UserProfile = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const Navigate = useNavigate();
-  const id =  localStorage.getItem('userId')
-  let userId: string 
+  const id = localStorage.getItem('userId')
+  let userId: string
   if (id) {
-     userId = JSON.parse(id)
+    userId = JSON.parse(id)
   }
+
+  const [editUserOpen, setEditUserOpen] = useState(false);
+
   const handleOpenMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -27,16 +30,15 @@ const UserProfile = () => {
     setAnchorEl(null);
   };
 
-  const handleEditProfile =() => {
-    
-
+  const handleEditProfile = () => {
+    setEditUserOpen(true);
     handleCloseMenu();
   };
 
-  const handleDeleteAccount = async() => {
+  const handleDeleteAccount = async () => {
     try {
       const response = await axios.delete(`${api}/api/users/delete/${userId}`);
-      if (response) {  
+      if (response) {
         window.alert('User successfully deleted')
         localStorage.removeItem('userId')
         localStorage.removeItem('username')
@@ -44,14 +46,19 @@ const UserProfile = () => {
         Navigate('/')
       }
 
-    } catch (error:any) {
-      window.alert(error.response.data.message)}
+    } catch (error: any) {
+      window.alert(error.response.data.message)
+    }
     handleCloseMenu();
   };
 
   const handleLogout = () => {
     localStorage.removeItem('username');
     Navigate('/');
+  };
+
+  const handleCloseEditUser = () => {
+    setEditUserOpen(false);
   };
 
   return (
@@ -78,6 +85,23 @@ const UserProfile = () => {
           <Typography variant="body1">Logout</Typography>
         </MenuItem>
       </Menu>
+      <Popover
+        open={editUserOpen}
+        anchorEl={anchorEl}
+        onClose={handleCloseEditUser}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Box p={2}>
+          <EditUser />
+        </Box>
+      </Popover>
     </>
   );
 };
