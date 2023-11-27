@@ -1,49 +1,45 @@
 import { useState, useEffect } from "react";
-import {Container,Typography,Card,CardActions,CardContent,CardActionArea,CardMedia,Button, CircularProgress,} from "@mui/material";
+import {Container,Typography,Card,CardActions,CardContent,CardActionArea,CardMedia,Button,CircularProgress,} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Banner } from "../../interface";
-import axios from "axios";
-const api = import.meta.env.VITE_MY_SERVER;
+import { Banner } from "../../interface/interface";
+import { deleteBanner, fetchBanners } from "../../../services/banners.service";
 
 export default function UserBanners() {
   const navigate = useNavigate();
+  const [banners, setBanners] = useState<Banner[] | null>(null);
+  
   const userName = localStorage.getItem("username");
-  if (!userName) {navigate('/')}
+  if (!userName) {
+    navigate("/");
+  }
+  
+  async function getBanners(){
+    const data = await fetchBanners() 
+    if (data)
+    setBanners (data)}
 
-  const [banners, setBanners] = useState<Banner[]|null>(null);
   useEffect(() => {
-    async function fetchBanners() {
-      try {
-        const response = await axios.get(`${api}/api/banners`);
-        setBanners(response.data);
-      } catch (error) {
-        console.error("Error fetching banners:", error);
-      }
+    getBanners()
+  }, [banners]);
+
+  const deleteBannerById = async(id:string)=>{
+    const response = await deleteBanner(id)
+    if (response && banners) {
+    setBanners(banners.filter((banner) => banner._id !== id))
     }
+  }
 
-    fetchBanners();
-  }, []);
-
-  const deleteBanner = async (id: string) => {
-    const token = localStorage.getItem("token")?.replace(/^"|"$/g, "");
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    try {
-      await axios.delete(`${api}/api/banners/${id}`, options);
-      if(banners)
-      setBanners(banners.filter((banner) => banner._id !== id));
-    } catch (error) {
-      console.error("Error deleting banner:", error);
-    }
-  };
 
   if (!banners) {
     return (
-      <div style={{minHeight:'50vh',display: "flex",alignItems: "center",justifyContent: "center",}}>
+      <div
+        style={{
+          minHeight: "50vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <CircularProgress />
       </div>
     );
@@ -56,7 +52,8 @@ export default function UserBanners() {
         maxWidth: "1200px",
         marginTop: "8px",
         backgroundColor: "#f4f4f4",
-      }}>
+      }}
+    >
       <Typography
         variant="h4"
         gutterBottom
@@ -64,7 +61,7 @@ export default function UserBanners() {
           fontWeight: "bold",
           marginBottom: "2rem",
           textAlign: "center",
-          color: "#00796b", // Dark teal color for the title
+          color: "#00796b",
           marginTop: "20px",
         }}
       >
@@ -93,12 +90,12 @@ export default function UserBanners() {
                 justifyContent: "space-between",
                 boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                 borderRadius: "10px",
-                border: "1px solid #ccc", // Lighter grey border
-                backgroundColor: "#ffffff", // White background for card
+                border: "1px solid #ccc",
+                backgroundColor: "#ffffff",
                 "&:hover": {
                   boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.3)",
-                  border: "1px solid #00796b", // Dark teal border on hover
-                  transform: "scale(1.03)", // Slightly scaling up the card on hover
+                  border: "1px solid #00796b",
+                  transform: "scale(1.03)",
                 },
               }}
             >
@@ -116,7 +113,8 @@ export default function UserBanners() {
                   gutterBottom
                   variant="h6"
                   component="div"
-                  sx={{ fontWeight: "bold", color: "#005662" }}>
+                  sx={{ fontWeight: "bold", color: "#005662" }}
+                >
                   {" "}
                   {card.image.alt}
                 </Typography>
@@ -132,7 +130,7 @@ export default function UserBanners() {
                     backgroundColor: "#009688",
                     color: "white",
                     "&:hover": { backgroundColor: "#00796b" },
-                  }} 
+                  }}
                 >
                   Edit
                 </Button>
@@ -142,11 +140,12 @@ export default function UserBanners() {
                     backgroundColor: "#e57373",
                     color: "white",
                     "&:hover": { backgroundColor: "#ef5350" },
-                  }} 
+                  }}
                   onClick={(e) => {
-                    deleteBanner(card._id);
+                    deleteBannerById(card._id);
                     e.stopPropagation();
-                  }}>
+                  }}
+                >
                   Delete
                 </Button>
               </CardActions>
@@ -154,7 +153,6 @@ export default function UserBanners() {
           </CardActionArea>
         ))}
       </div>
-
     </Container>
   );
 }

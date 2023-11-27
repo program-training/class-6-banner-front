@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "./functions";
 const api = import.meta.env.VITE_MY_SERVER;
@@ -33,8 +33,9 @@ export default function LogIn() {
           Navigate('/userBanners')
         }
 
-      } catch (error:any) {
-        window.alert(error.response.data.message)
+      } catch (error) {
+        if(error instanceof AxiosError)
+        window.alert(error.response?.data.message)
         console.error("Error during registration:", error);
       }
     } else if (validateEmail(userData.email) && !validatePassword(userData.password)) {

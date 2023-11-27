@@ -29,7 +29,7 @@ export default function Footer() {
                 alignItems: "center",
                 fontWeight: "bold",
                 fontSize: "1.25rem",
-                color: "#333", // Adjust the color as needed
+                color: "#333", 
                 marginBottom: "10px"
               }}
             >
@@ -44,7 +44,7 @@ export default function Footer() {
               variant="h6"
               fontWeight="bold"
               fontSize="1.25rem"
-              color="#333" // Use this color or replace with "text.primary" if using a theme
+              color="#333" 
               gutterBottom
             >
               Contact Us
@@ -64,8 +64,7 @@ export default function Footer() {
               variant="h6"
               fontWeight="bold"
               fontSize="1.25rem"
-              color="#333" // Use this color or replace with "text.primary" if using a theme
-              gutterBottom
+              color="#333" 
             >
               Follow Us
             </Typography>
