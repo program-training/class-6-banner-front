@@ -36,9 +36,7 @@ export default function Footer() {
               About Us
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              At "Banner Plus," we specialize in creating unique banners tailored to every event, business, or marketing need. If you're looking to highlight your business, promote a product or service, or add color and life to a special event, you're in the right place!
-            
-
+              At "Banner Plus", we specialize in creating unique banners tailored to every event, business, or marketing need. If you're looking to highlight your business, promote a product or service, or add color and life to a special event, you're in the right place!
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>

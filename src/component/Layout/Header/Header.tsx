@@ -1,44 +1,66 @@
-import {AppBar,Toolbar,Button,Stack,Typography,styled,InputBase,alpha,} from "@mui/material";
+import { AppBar, Toolbar, Button, Stack, Typography, TextField, } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import Autocomplete from '@mui/material/Autocomplete';
 import UserProfile from "./UserActions";
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
+const api = import.meta.env.VITE_MY_SERVER;
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: "auto",
-  marginRight: "auto",
-  width: "50%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
-
-const InputBaseStyled = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 2),
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
 
 export default function Header() {
   const userName = localStorage.getItem("username");
   const Navigate = useNavigate();
-  if (!userName) {Navigate('/')}
+  
+  interface SearchResult {
+    label: string;
+    id: string;
+  }
+
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSearch = async (searchQuery: any) => {
+    try {
+      const response = await axios.get(`${api}/api/banners?search=${searchQuery}`);
+      if (!Array.isArray(response.data)) {
+        throw new Error("Response is not an array");
+      }
+      const searchItems = response.data.map(banner => ({
+        label: banner.image.alt, // הטקסט שיוצג
+        id: banner._id // מזהה הבאנר
+      }));
+      console.log(searchItems);
+      setSearchResults(searchItems);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+  useEffect(() => {
+    const loadInitialSearchResults = async () => {
+      try {
+        const response = await axios.get(`${api}/api/banners`);
+        if (!Array.isArray(response.data)) {
+          throw new Error("Response is not an array");
+        }
+        const searchItems = response.data.map(banner => ({
+          label: banner.image.alt,
+          id: banner._id
+        }));
+        setSearchResults(searchItems);
+      } catch (error) {
+        console.error("Error fetching initial search results:", error);
+      }
+    };
+
+    loadInitialSearchResults();
+  }, []); // מערך תלויות ריק יבטיח שהפונקציה תופעל רק בעת טעינת הקומפוננטה
+
+
+
+
+  if (!userName) { Navigate('/') }
 
   const homePage = () => {
     Navigate(`/userBanners`);
@@ -48,8 +70,9 @@ export default function Header() {
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "black"  }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "black" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* User Profile and Name */}
         <Stack
           sx={{
             display: "flex",
@@ -65,8 +88,9 @@ export default function Header() {
           </Typography>
         </Stack>
 
+        {/* Banner Title */}
         <Typography
-        onClick={homePage}
+          onClick={homePage}
           variant="h5"
           noWrap
           component="a"
@@ -87,25 +111,66 @@ export default function Header() {
           BANNERS
         </Typography>
 
+        {/* Search Box */}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Search sx={{ flexGrow: 1 }}>
-            <SearchIcon sx={{ color: "white" }} />
-            <InputBaseStyled placeholder="Search…" />
-          </Search>
+          <Autocomplete
+            freeSolo
+            options={searchResults}
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+            onChange={(event, value) => {
+              if (typeof value !== 'string' && value?.id) {
+                Navigate(`/bannerPage/${value.id}`);
+              }
+            }}
+            onInputChange={(event, newInputValue) => {
+              if (newInputValue.length > 2) {
+                handleSearch(newInputValue);
+              }
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search Banner"
+                InputProps={{
+                  ...params.InputProps,
+                  type: 'search',
+                  startAdornment: <SearchIcon sx={{ color: "white", marginRight: "10px" }} />,
+                }}
+                sx={{
+                  width: 300,
+                  backgroundColor: '#333', // Dark grey
+                  borderRadius: '4px',
+                  color: 'white', // Light text
+                  '.MuiInputLabel-root': { // Label color
+                    color: 'white',
+                  },
+                  '.MuiOutlinedInput-root': { // Border color
+                    '& fieldset': {
+                      borderColor: 'white',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'white',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'white',
+                    },
+                  },
+                }}
+              />
+            )}
+          />
 
-          <Button variant="outlined" onClick={handleAddBanner} style={{ borderColor: 'white', color: 'white',marginLeft: ".5rem" }}>ADD BANNER</Button>
+
+          <Button variant="outlined" onClick={handleAddBanner} style={{ borderColor: 'white', color: 'white', marginLeft: ".5rem" }}>ADD BANNER</Button>
 
           <Stack
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
           >
-            <Stack direction="row" spacing={3}>
-              <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
-            </Stack>
-
-
+            <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
           </Stack>
         </div>
       </Toolbar>
     </AppBar>
   );
+
 }
