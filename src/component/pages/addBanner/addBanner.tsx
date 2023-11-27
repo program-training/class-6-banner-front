@@ -57,14 +57,6 @@ const AddBanner: React.FC = () => {
         resolver: yupResolver(schema),
     });
 
-    // const getBase64 = (file: File) => {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    //     reader.onload = () => {
-    //         setImage(reader.result);
-    //     };
-    // }
-
     const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const imageUrl = await uploadImageToCloudinary(e.target.files[0]);

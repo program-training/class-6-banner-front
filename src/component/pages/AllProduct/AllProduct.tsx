@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Product } from "../../interface";
-import ProductCard from "../../mui/CardProduct";
+import { Product } from "../../interface/interface";
+import ProductCard from "../../Templates/CardProduct";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 const store = import.meta.env.VITE_STORE_SERVER;
@@ -24,7 +24,14 @@ export default function AllProduct() {
 
   if (!data) {
     return (
-      <div style={{minHeight:'50vh',display: "flex",alignItems: "center",justifyContent: "center",}}>
+      <div
+        style={{
+          minHeight: "50vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <CircularProgress />
       </div>
     );

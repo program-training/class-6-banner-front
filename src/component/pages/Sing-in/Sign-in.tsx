@@ -1,5 +1,4 @@
 import * as React from "react";
-// import{GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline} from "react-google-login"
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,22 +6,24 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../log-in/functions";
 const api = import.meta.env.VITE_MY_SERVER;
 
-
 export default function SignIn() {
-
-  const Navigate = useNavigate()
-  const [passwordVerification, setPasswordVerification] = React.useState('')
+  const Navigate = useNavigate();
+  const [passwordVerification, setPasswordVerification] = React.useState("");
+  const [successMessage, setSuccessMessage] = React.useState("");
+  const [isSuccess, setIsSuccess] = React.useState(false);
   const [user, setUser] = React.useState({
     username: "",
     email: "",
     password: "",
-    isAdmin: true
-  })
+    isAdmin: true,
+  });
   const [errorMessages, setErrorMessages] = React.useState({
     username: "",
     email: "",
@@ -30,18 +31,11 @@ export default function SignIn() {
     passwordVerification: "",
   });
 
-  // const handleGoogleSignInSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-  //   console.log("Google Sign-In Success:", response);
-  // };
-
-  // const handleGoogleSignInFailure = (error:any) => {
-  //   console.error("Google Sign-In Failure:", error);
-  // };
-
   const handleRegistration = async () => {
-    localStorage.setItem('email', JSON.stringify(user.email))
+    localStorage.setItem("email", JSON.stringify(user.email));
 
-    const usernameError = user.username.length === 0 ? "Username is required" : "";
+    const usernameError =
+      user.username.length === 0 ? "Username is required" : "";
     const emailError = validateEmail(user.email) ? "" : "Invalid email format";
     const passwordError = validatePassword(user.password)
       ? ""
@@ -65,17 +59,16 @@ export default function SignIn() {
       !passwordVerificationError
     ) {
       try {
-        console.log(user);
-        const response = await axios.post(
-          ` ${api}/api/users/register`,
-          user
-        );
+        const response = await axios.post(` ${api}/api/users/register`, user);
         if (response) {
-          Navigate("/")
+          setSuccessMessage("Sign-up successful!");
+          setIsSuccess(true);
+          setTimeout(() => {
+            Navigate("/");
+          }, 2000);
         }
-      }
-      catch (error: any) {
-        window.alert(error.response.data.message)
+      } catch (error: any) {
+        window.alert(error.response.data.message);
         console.error("Error during registration:", error);
       }
     }
@@ -83,10 +76,14 @@ export default function SignIn() {
 
   return (
     <React.Fragment>
-      <Dialog sx={{
-        backgroundImage: 'url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)',
-        backgroundSize: 'cover'
-      }} open={true}  >
+      <Dialog
+        sx={{
+          backgroundImage:
+            "url(https://dalicanvas.co.il/wp-content/uploads/2022/10/%D7%A9%D7%A7%D7%99%D7%A2%D7%94-%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA-1.jpg)",
+          backgroundSize: "cover",
+        }}
+        open={true}
+      >
         <DialogTitle>sign up</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -165,16 +162,17 @@ export default function SignIn() {
             error={Boolean(errorMessages.passwordVerification)}
             helperText={errorMessages.passwordVerification}
           />
+          {isSuccess && (
+             <div style={{ display: "flex", alignItems: "center" }}>
+             <FontAwesomeIcon icon={faCheckCircle} style={{ color: "green", marginRight: "10px" }} />
+             <DialogContentText sx={{ color: "green" }}>
+               {successMessage}
+             </DialogContentText>
+           </div>
+          )}
         </DialogContent>
         <DialogActions>
-          {/* <GoogleLogin
-  clientId="83361752716-l79sdsffgft1hpf7pfsiqrr5pki7d4de.apps.googleusercontent.com"
-  buttonText="Sign in with Google"
-  onSuccess={handleGoogleSignInSuccess}
-  onFailure={handleGoogleSignInFailure}
-  cookiePolicy={'single_host_origin'} */}
-          {/* /> */}
-          <Button onClick={()=>Navigate('/')}> back </Button>
+          <Button onClick={() => Navigate("/")}> back </Button>
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>
