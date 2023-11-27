@@ -24,11 +24,6 @@ const UserProfile = () => {
 
   const [editUserOpen, setEditUserOpen] = useState(false);
 
-  const handleOpenMenu = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
