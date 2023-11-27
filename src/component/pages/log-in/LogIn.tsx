@@ -26,29 +26,10 @@ export default function LogIn() {
           `${api}/api/users/login`,
           userData
         );
-        if (response.data) {
-          console.log(response.data);
-
-          localStorage.setItem('username', JSON.stringify(response.data.user.username))
+        if (response.data) {  
+        localStorage.setItem('username', JSON.stringify(response.data.user.username))
           localStorage.setItem('token', JSON.stringify(response.data.token))
-          const storedToken = localStorage.getItem('token');
-          const storedUsername = localStorage.getItem('username');
-          
-          if (storedUsername) {
-              try {
-                  const username = JSON.parse(storedUsername);
-                  console.log('Stored Username:', username);
-              } catch (error) {
-                  console.error('Error parsing stored username:', error);
-              }
-          }
-          else{
-            console.log('No stored username');
-          }
-          if (storedToken) {
-            console.log('Stored Token:', JSON.parse(storedToken));
-          }
-
+          localStorage.setItem('userId', JSON.stringify(response.data.user._id))
           Navigate('/userBanners')
         }
 

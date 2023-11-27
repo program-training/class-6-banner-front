@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {Container,Typography,Card,CardActions,CardContent,CardActionArea,CardMedia,Button,} from "@mui/material";
+import {Container,Typography,Card,CardActions,CardContent,CardActionArea,CardMedia,Button, CircularProgress,} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Banner } from "../../interface";
 import axios from "axios";
@@ -7,7 +7,7 @@ const api = import.meta.env.VITE_MY_SERVER;
 
 export default function UserBanners() {
   const navigate = useNavigate();
-  const [banners, setBanners] = useState<Banner[]>([]);
+  const [banners, setBanners] = useState<Banner[]|null>(null);
 
   useEffect(() => {
     async function fetchBanners() {
@@ -32,12 +32,20 @@ export default function UserBanners() {
 
     try {
       await axios.delete(`${api}/api/banners/${id}`, options);
-
+      if(banners)
       setBanners(banners.filter((banner) => banner._id !== id));
     } catch (error) {
       console.error("Error deleting banner:", error);
     }
   };
+
+  if (!banners) {
+    return (
+      <div style={{minHeight:'50vh',display: "flex",alignItems: "center",justifyContent: "center",}}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Container
