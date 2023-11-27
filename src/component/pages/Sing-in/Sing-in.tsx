@@ -174,6 +174,7 @@ export default function SignIn() {
   onFailure={handleGoogleSignInFailure}
   cookiePolicy={'single_host_origin'} */}
           {/* /> */}
+          <Button onClick={()=>Navigate('/')}> back </Button>
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>

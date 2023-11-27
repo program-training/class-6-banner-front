@@ -7,8 +7,10 @@ const api = import.meta.env.VITE_MY_SERVER;
 
 export default function UserBanners() {
   const navigate = useNavigate();
-  const [banners, setBanners] = useState<Banner[]|null>(null);
+  const userName = localStorage.getItem("username");
+  if (!userName) {navigate('/')}
 
+  const [banners, setBanners] = useState<Banner[]|null>(null);
   useEffect(() => {
     async function fetchBanners() {
       try {
