@@ -1,35 +1,32 @@
 import { useState } from 'react';
-import {
-  IconButton,Menu,MenuItem,Typography,useTheme} from '@mui/material';
+import {IconButton,Menu,MenuItem,Typography,useTheme} from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 const api = import.meta.env.VITE_MY_SERVER;
 
-
 const UserProfile = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<null| HTMLElement>(null);
   const theme = useTheme();
   const Navigate = useNavigate();
   const id =  localStorage.getItem('userId')
   let userId: string 
   if (id) {
-     userId = JSON.parse(id)
-  }
-  const handleOpenMenu = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
+    userId = JSON.parse(id)}
+    
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+  const handleOpenMenu = (event:React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
 
   const handleEditProfile =() => {
-    
-
+  
     handleCloseMenu();
   };
 
@@ -43,11 +40,11 @@ const UserProfile = () => {
         localStorage.removeItem('token')
         Navigate('/')
       }
-
-    } catch (error:any) {
-      window.alert(error.response.data.message)}
-    handleCloseMenu();
-  };
+    } catch (error:unknown) {
+      if (error instanceof AxiosError) {
+      window.alert(error.response?.data.message)}}
+      finally{ handleCloseMenu()}
+    };
 
   const handleLogout = () => {
     localStorage.removeItem('username');

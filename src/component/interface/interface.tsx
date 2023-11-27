@@ -55,3 +55,8 @@ export interface Attributes {
   key: string;
   value: number | string;
 }
+
+export interface SearchResult {
+  label: string;
+  id: string;
+}
