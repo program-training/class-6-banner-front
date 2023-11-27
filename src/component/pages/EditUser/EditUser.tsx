@@ -1,14 +1,8 @@
 import { useState, useEffect } from 'react';
-import {
-    Button,
-    TextField,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-} from '@mui/material';
+import {Button,TextField,Dialog,DialogTitle,DialogContent,DialogActions,} from '@mui/material';
 import axios from 'axios';
 import { boolean } from 'yup';
+const api = import.meta.env.VITE_MY_SERVER
 
 const EditUser = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(true);
@@ -27,7 +21,7 @@ const EditUser = () => {
                 if (id) {
                     const userId = JSON.parse(id);
                     console.log(userId);
-                    const response = await axios.get(`http://localhost:8008/api/users/${userId}`)
+                    const response = await axios.get(`${api}/api/users/${userId}`)
                     setUserData(response.data.user);
                 }
             } catch (error) {
@@ -46,7 +40,7 @@ const EditUser = () => {
             const id = localStorage.getItem('userId');
             if (id) {
                 const userId = JSON.parse(id);
-                const response = await axios.put(`http://localhost:8008/api/users/update/${userId}`, {
+                const response = await axios.put(`${api}/api/users/update/${userId}`, {
                     "username": userData.username,
                     "email": userData.email,
                     "password": userData.password,
@@ -54,6 +48,7 @@ const EditUser = () => {
                 })
                 console.log('User details updated:', response.data);
                 handleCloseDialog();
+                localStorage.setItem('username', JSON.stringify(userData.username))
             }
         } catch (error) {
             console.error('Error updating user details:', error);
