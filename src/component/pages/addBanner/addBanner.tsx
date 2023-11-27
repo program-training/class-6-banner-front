@@ -4,30 +4,13 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
-import './AddBanner.css';
 import { useNavigate, useParams } from 'react-router-dom';
-// import Header from '../UserBanner/Header';
+import { BannerFormData } from '../../interface';
 
 const api = import.meta.env.VITE_MY_SERVER;
 
-
-interface BannerFormData {
-    id: number;
-    image: {
-        url: File | null;
-        alt: string;
-    };
-    text: string;
-    createAt: Date;
-    author: string;
-    rating: number;
-    sale: number;
-    category: string;
-    productID?: string;
-}
-
 const schema = yup.object().shape({
-    id: yup.number().required('ID is required'),
+    id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
         alt: yup.string().required('Alt text is required'),
@@ -57,24 +40,15 @@ const AddBanner: React.FC = () => {
         resolver: yupResolver(schema),
     });
 
-    // const getBase64 = (file: File) => {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    //     reader.onload = () => {
-    //         setImage(reader.result);
-    //     };
-    // }
-
     const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const imageUrl = await uploadImageToCloudinary(e.target.files[0]);
             if (imageUrl) {
-                setImage(imageUrl); // עדכון הכתובת של התמונה
+                setImage(imageUrl);
                 setUploadedImage(e.target.files[0]);
             }
         }
     };
-    
 
     const handleReplaceImageClick = () => {
         if (fileInputRef.current) {
@@ -94,7 +68,7 @@ const AddBanner: React.FC = () => {
             const requestData = {
                 "id": data.id,
                 "image": {
-                    "url": image, // השתמש ב-URL של התמונה מ-Cloudinary
+                    "url": image,
                     "alt": data.image.alt,
                 },
                 "text": data.text,
@@ -107,8 +81,6 @@ const AddBanner: React.FC = () => {
             };
 
             const response = await axios.post(`${api}/api/banners`, requestData, options);
-
-            
             if (response.status < 210) {
                 console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
@@ -122,17 +94,15 @@ const AddBanner: React.FC = () => {
         }
     };
     
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const uploadImageToCloudinary = async (imageFile:any) => {
-        const preset_key = "ughivthg"; // החלף עם הערך האמיתי שלך
-        const cloudName = "dm7dutcrn"; // החלף עם הערך האמיתי שלך
+        const preset_key = "ughivthg";
+        const cloudName = "dm7dutcrn";
         const formData = new FormData();
         formData.append('file', imageFile);
         formData.append('upload_preset', preset_key);
-    
         try {
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
-            return response.data.url; // החזרת ה-URL של התמונה המועלת
+            return response.data.url;
         } catch (error) {
             console.error('Error uploading the image: ', error);
         }

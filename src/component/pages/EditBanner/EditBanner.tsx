@@ -4,7 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import '../addBanner/AddBanner.css';
+// import '../addBanner/AddBanner.css';
 import { BannerFormData } from '../../interface';
 import { schema } from './schema';
 
