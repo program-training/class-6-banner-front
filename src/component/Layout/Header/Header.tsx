@@ -28,8 +28,8 @@ export default function Header() {
         throw new Error("Response is not an array");
       }
       const searchItems = response.data.map(banner => ({
-        label: banner.image.alt, // הטקסט שיוצג
-        id: banner._id // מזהה הבאנר
+        label: banner.image.alt, 
+        id: banner._id 
       }));
       console.log(searchItems);
       setSearchResults(searchItems);
@@ -110,19 +110,17 @@ export default function Header() {
         >
           BANNERS
         </Typography>
-
-        {/* Search Box */}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Autocomplete
             freeSolo
             options={searchResults}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
-            onChange={(event, value) => {
+            onChange={(_, value) => {
               if (typeof value !== 'string' && value?.id) {
                 Navigate(`/bannerPage/${value.id}`);
               }
             }}
-            onInputChange={(event, newInputValue) => {
+            onInputChange={(_, newInputValue) => {
               if (newInputValue.length > 2) {
                 handleSearch(newInputValue);
               }
