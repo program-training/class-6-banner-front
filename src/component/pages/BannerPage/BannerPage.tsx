@@ -1,34 +1,22 @@
 import { useState, useEffect } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  Container,
-} from "@mui/material";
+import {Card,CardMedia,CardContent,Typography,Container,} from "@mui/material";
 import { Banner } from "../../interface/interface";
-
-const api = import.meta.env.VITE_MY_SERVER;
+import { fetchBannerById } from "../../../services/banners.service";
 
 export default function BannerPage() {
   const [banner, setBanner] = useState<Banner | null>(null);
   const { id } = useParams();
 
-  useEffect(() => {
-    const fetchBanner = async () => {
-      try {
-        const response = await axios.get(`${api}/api/banners/${id}`);
-        setBanner(response.data);
-      } catch (error) {
-        console.error("Error fetching banner:", error);
-      }
-    };
+  async function getBanner(id:string) {
+    const data = await fetchBannerById(id);
+    if (data) setBanner(data);
+  }
 
+  useEffect(() => {
     if (id) {
-      fetchBanner();
+      getBanner(id);
     }
   }, [id]);
 

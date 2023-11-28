@@ -78,6 +78,7 @@ export default function UserBanners() {
       >
         {banners.map((card: Banner) => (
           <CardActionArea
+            key={Date.now() * Math.random()}
             onClick={() => navigate(`/bannerPage/${card._id}`)}
             style={{ width: "300px", transition: "transform 0.3s ease" }}
           >

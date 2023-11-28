@@ -24,6 +24,7 @@ export const deleteBanner = async (id: string) => {
     const response = await axios.delete(`${api}/api/banners/${id}`, options);
     if (response)
       return response
+
   } catch (error) {
     console.error("Error deleting banner:", error);
   }
@@ -62,3 +63,19 @@ export const updateBanner = async (id: string | undefined, requestData: EditRequ
     throw error;
   }
 };
+
+    } catch (error) {
+      console.error("Error deleting banner:", error);
+    }
+  };
+
+
+ export const fetchBannerById = async (id:string) => {
+    try {
+      const response = await axios.get(`${api}/api/banners/${id}`);
+      return response.data
+    } catch (error) {
+      console.error("Error fetching banner:", error);
+    }
+  };
+
