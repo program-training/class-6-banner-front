@@ -120,6 +120,7 @@ export default function Header() {
             }}
             renderInput={(params) => (
               <TextField
+
                 {...params}
                 label="Search Banner"
                 InputProps={{
@@ -153,6 +154,9 @@ export default function Header() {
             )}
           />
           <Button
+            sx={{
+              height:"80%"
+            }}
             variant="outlined"
             onClick={handleAddBanner}
             style={{
