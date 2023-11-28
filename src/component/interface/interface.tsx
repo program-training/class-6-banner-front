@@ -60,3 +60,33 @@ export interface SearchResult {
   label: string;
   id: string;
 }
+
+export interface EditRequestData {
+  id: number | undefined;
+  image: { 
+    url: string;
+    alt: string;
+  };
+  text: string;
+  createAt: Date;
+  author: string;
+  rating: number;
+  sale: number;
+  category: string;
+  productID: number | undefined
+}
+
+export interface AddRequestData {
+  id: number | undefined;
+  image: {
+    url: string | ArrayBuffer | null;
+    alt: string;
+  };
+  text: string;
+  createAt: Date;
+  author: string;
+  rating: number;
+  sale: number;
+  category: string;
+  productID: string | undefined;
+}

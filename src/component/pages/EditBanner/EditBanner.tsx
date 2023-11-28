@@ -1,20 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
-import {
-  Box,
-  Button,
-  InputLabel,
-  TextField,
-  Typography,
-  CardMedia,
-  CircularProgress,
-} from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import "../addBanner/AddBanner.css";
-import { BannerFormData } from "../../interface/interface";
-import { schema } from "./schema";
+import React, { useEffect, useState, useRef } from 'react';
+import { Box, Button, InputLabel, TextField, Typography, CardMedia, CircularProgress } from '@mui/material';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { BannerFormData } from '../../interface/interface';
+import { schema } from './schema';
+import { uploadImageToCloudinary, updateBanner } from '../../../services/banners.service';
 
 const api = import.meta.env.VITE_MY_SERVER;
 
@@ -26,28 +18,19 @@ const EditBanner: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { id } = useParams();
   const Navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm<BannerFormData>({
+  const { register, handleSubmit, formState: { errors }, setValue, } = useForm<BannerFormData>({
     resolver: yupResolver(schema),
   });
+
   useEffect(() => {
     const fetchBanner = async () => {
       try {
         const response = await axios.get(`${api}/api/banners/${id}`);
         const bannerData = response.data;
         setImagePreview(bannerData.image.url);
-        setValue("image.url", bannerData.image?.url);
-        setValue("image.alt", bannerData.image?.alt);
-        setValue("text", bannerData.text);
-        setValue("author", bannerData.author);
-        setValue("rating", bannerData.rating);
-        setValue("sale", bannerData.sale);
-        setValue("category", bannerData.category);
-        setValue("productID", bannerData.productID);
+        Object.entries(bannerData).forEach(([key, value]) => {
+          setValue(key as keyof BannerFormData, value as typeof key);
+        });
       } catch (error) {
         console.error("Error fetching banner:", error);
       }
@@ -59,7 +42,8 @@ const EditBanner: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       const imageUrl = await uploadImageToCloudinary(e.target.files[0]);
       if (imageUrl) {
-        setImagePreview(imageUrl); // עדכון הכתובת של התמונה
+        setImagePreview(imageUrl);
+        setValue('image.url', imageUrl);
       }
     }
   };
@@ -74,7 +58,7 @@ const EditBanner: React.FC = () => {
       const requestData = {
         id: data.id,
         image: {
-          url: imagePreview, // השתמש ב-URL של התמונה מ-Cloudinary
+          url: imagePreview,
           alt: data.image.alt,
         },
         text: data.text,
@@ -91,11 +75,7 @@ const EditBanner: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.put(
-        `${api}/api/banners/${id}`,
-        requestData,
-        options
-      );
+      const response = await updateBanner(id, requestData, options);
       if (response.status < 210) {
         setStatus("Banner updated successfully!");
         Navigate("/userBanners");
@@ -109,23 +89,7 @@ const EditBanner: React.FC = () => {
       setLoading(false);
     }
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const uploadImageToCloudinary = async (imageFile: any) => {
-    const preset_key = "uuqscwgq"; // החלף עם הערך האמיתי שלך
-    const cloudName = "dm7dutcrn"; // החלף עם הערך האמיתי שלך
-    const formData = new FormData();
-    formData.append("file", imageFile);
-    formData.append("upload_preset", preset_key);
-    try {
-      const response = await axios.post(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData
-      );
-      return response.data.url; // החזרת ה-URL של התמונה המועלת
-    } catch (error) {
-      console.error("Error uploading the image: ", error);
-    }
-  };
+
   return (
     <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
       <Typography sx={{ textAlign: "center", fontSize: "30px" }}>
@@ -227,9 +191,7 @@ const EditBanner: React.FC = () => {
         <Button type="submit" variant="contained" disabled={loading}>
           {loading ? <CircularProgress size={24} /> : "Edit Banner"}
         </Button>
-        <Typography
-          color={status === "Banner updated successfully!" ? "green" : "red"}
-        >
+        <Typography color={status === "Banner updated successfully!" ? "green" : "red"}>
           {status}
         </Typography>
       </Box>

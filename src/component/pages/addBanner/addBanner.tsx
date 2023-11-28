@@ -1,44 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Box, Button, TextField, Typography, InputLabel, CardMedia } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import * as yup from 'yup';
+import { schema } from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-import './AddBanner.css';
+import { addBanner, uploadImageToCloudinary } from '../../../services/banners.service';
 import { useNavigate, useParams } from 'react-router-dom';
-// import Header from '../UserBanner/Header';
-
-const api = import.meta.env.VITE_MY_SERVER;
-
-
-interface BannerFormData {
-    id: number;
-    image: {
-        url: File | null;
-        alt: string;
-    };
-    text: string;
-    createAt: Date;
-    author: string;
-    rating: number;
-    sale: number;
-    category: string;
-    productID?: string;
-}
-
-const schema = yup.object().shape({
-    id: yup.number().required('ID is required'),
-    image: yup.object().shape({
-        url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
-        alt: yup.string().required('Alt text is required'),
-    }),
-    text: yup.string().required('Text is required'),
-    createAt: yup.date().required('Creation date is required'),
-    author: yup.string().required('Author is required'),
-    rating: yup.number().required('Rating is required'),
-    sale: yup.number().required('Sale is required'),
-    category: yup.string().required('Category is required'),
-});
+import { BannerFormData } from '../../interface/interface';
 
 const AddBanner: React.FC = () => {
     const Navigate = useNavigate()
@@ -61,12 +28,11 @@ const AddBanner: React.FC = () => {
         if (e.target.files && e.target.files.length > 0) {
             const imageUrl = await uploadImageToCloudinary(e.target.files[0]);
             if (imageUrl) {
-                setImage(imageUrl); // עדכון הכתובת של התמונה
+                setImage(imageUrl);
                 setUploadedImage(e.target.files[0]);
             }
         }
     };
-    
 
     const handleReplaceImageClick = () => {
         if (fileInputRef.current) {
@@ -86,7 +52,7 @@ const AddBanner: React.FC = () => {
             const requestData = {
                 "id": data.id,
                 "image": {
-                    "url": image, // השתמש ב-URL של התמונה מ-Cloudinary
+                    "url": image,
                     "alt": data.image.alt,
                 },
                 "text": data.text,
@@ -98,9 +64,7 @@ const AddBanner: React.FC = () => {
                 "productID": id,
             };
 
-            const response = await axios.post(`${api}/api/banners`, requestData, options);
-
-            
+            const response = await addBanner(requestData, options);
             if (response.status < 210) {
                 console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
@@ -111,22 +75,6 @@ const AddBanner: React.FC = () => {
             }
         } catch (error) {
             console.error('Error:', error);
-        }
-    };
-    
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uploadImageToCloudinary = async (imageFile:any) => {
-        const preset_key = "ughivthg"; // החלף עם הערך האמיתי שלך
-        const cloudName = "dm7dutcrn"; // החלף עם הערך האמיתי שלך
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        formData.append('upload_preset', preset_key);
-    
-        try {
-            const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
-            return response.data.url; // החזרת ה-URL של התמונה המועלת
-        } catch (error) {
-            console.error('Error uploading the image: ', error);
         }
     };
     
