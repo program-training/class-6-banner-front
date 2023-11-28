@@ -14,7 +14,7 @@ const EditUser = () => {
 
     async function getUser() {
         const data = await fetchUserById();
-        if (data) setUserData(data);
+        if (data) setUserData(data.user);
       }
     
     useEffect(() => {

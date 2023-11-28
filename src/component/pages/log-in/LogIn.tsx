@@ -9,6 +9,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "./functions";
+import { IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 const api = import.meta.env.VITE_MY_SERVER;
 
 export default function LogIn() {
@@ -18,6 +20,7 @@ export default function LogIn() {
     email: ls ? JSON.parse(ls) : "",
     password: '',
   });
+  const [showPassword ,setShowPassword] = React.useState(false);
 
   const handleLogIn = async () => {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
@@ -26,16 +29,16 @@ export default function LogIn() {
           `${api}/api/users/login`,
           userData
         );
-        if (response.data) {  
-        localStorage.setItem('username', JSON.stringify(response.data.user.username))
+        if (response.data) {
+          localStorage.setItem('username', JSON.stringify(response.data.user.username))
           localStorage.setItem('token', JSON.stringify(response.data.token))
           localStorage.setItem('userId', JSON.stringify(response.data.user._id))
           Navigate('/userBanners')
         }
 
       } catch (error) {
-        if(error instanceof AxiosError)
-        window.alert(error.response?.data.message)
+        if (error instanceof AxiosError)
+          window.alert(error.response?.data.message)
         console.error("Error during registration:", error);
       }
     } else if (validateEmail(userData.email) && !validatePassword(userData.password)) {
@@ -94,10 +97,19 @@ export default function LogIn() {
             margin="dense"
             id="password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             variant="standard"
             required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword((prevShowPassword) => !prevShowPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         <DialogActions>

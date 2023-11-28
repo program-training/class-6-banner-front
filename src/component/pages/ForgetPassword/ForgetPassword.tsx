@@ -7,7 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle"; import React from "react";
 import { useState } from "react"
 import { validatePassword, validateEmail } from "../log-in/functions";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 const api = import.meta.env.VITE_MY_SERVER;
 
@@ -16,6 +16,7 @@ export default function ForgetPassword() {
 
   const Navigate = useNavigate()
   const ls = localStorage.getItem("email")
+  const [status ,setStatus] = useState()
   const [obj, setObg] = useState({
     email: ls ? JSON.parse(ls) : "",
     newPassword: ''
@@ -52,17 +53,16 @@ export default function ForgetPassword() {
         `${api}/api/users/changepassword`,
         obj
       );
-      console.log(response.data, 'ddd');
-      if (response.data.message == "Password changed successfully") {
-        window.alert("סיסמא שונתה בהצלחה");
-        Navigate('/')
+      if (response.data.message == "Verification email sent. Please check your email to confirm password change.") {
+        setStatus(response.data.message)
       }
 
       else {
         window.alert('try again');
       }
-    } catch (error: any) {
-      if (error.response.data.message == "User not found") {
+    } catch (error:unknown) {
+      if(error instanceof AxiosError)
+      if (error.response?.data.message == "User not found") {
         window.alert("משתמש לא קיים");
       } else {
         window.alert("משהו השתבש נסה שוב מאוחר יותר");
@@ -123,6 +123,10 @@ export default function ForgetPassword() {
             helperText={passwordError}
           />
         </DialogContent>
+        {status &&
+        <DialogContentText sx={{ color: "green" }}>
+               {status}
+             </DialogContentText>}
         <DialogActions>
         <Button onClick={()=>Navigate('/')}> back </Button>
           <Button onClick={changePassword}>Change password</Button>
