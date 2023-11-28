@@ -32,7 +32,7 @@ export interface BannerFormData {
 }
 
 export interface User {
-    _id?:string
+    _id:string
   username: string;
   email: string;
   password: string;
