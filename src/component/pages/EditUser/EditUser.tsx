@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import {Button,TextField,Dialog,DialogTitle,DialogContent,DialogActions,} from '@mui/material';
-import axios from 'axios';
-import { boolean } from 'yup';
-const api = import.meta.env.VITE_MY_SERVER
+import { fetchUserById, handleUpdateUserData } from '../../../services/users.service';
 
 const EditUser = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(true);
@@ -11,24 +9,16 @@ const EditUser = () => {
         username: '',
         email: '',
         password: '',
-        isAdmin: boolean,
+        isAdmin:true,
     });
 
+    async function getUser() {
+        const data = await fetchUserById();
+        if (data) setUserData(data);
+      }
+    
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const id = localStorage.getItem('userId');
-                if (id) {
-                    const userId = JSON.parse(id);
-                    console.log(userId);
-                    const response = await axios.get(`${api}/api/users/${userId}`)
-                    setUserData(response.data.user);
-                }
-            } catch (error) {
-                console.error('Error fetching user details:', error);
-            }
-        }
-        fetchUserData();
+        getUser();
     }, []);
 
     const handleCloseDialog = () => {
@@ -37,19 +27,9 @@ const EditUser = () => {
 
     const handleSaveUserData = async () => {
         try {
-            const id = localStorage.getItem('userId');
-            if (id) {
-                const userId = JSON.parse(id);
-                const response = await axios.put(`${api}/api/users/update/${userId}`, {
-                    "username": userData.username,
-                    "email": userData.email,
-                    "password": userData.password,
-                    "isAdmin": userData.isAdmin
-                })
-                console.log('User details updated:', response.data);
-                handleCloseDialog();
-                localStorage.setItem('username', JSON.stringify(userData.username))
-            }
+           const response = await handleUpdateUserData(userData)
+           if( response)
+           handleCloseDialog()
         } catch (error) {
             console.error('Error updating user details:', error);
         }

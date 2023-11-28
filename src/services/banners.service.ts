@@ -28,3 +28,13 @@ export async function fetchBanners() {
       console.error("Error deleting banner:", error);
     }
   };
+
+
+ export const fetchBannerById = async (id:string) => {
+    try {
+      const response = await axios.get(`${api}/api/banners/${id}`);
+      return response.data
+    } catch (error) {
+      console.error("Error fetching banner:", error);
+    }
+  };

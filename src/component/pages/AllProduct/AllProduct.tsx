@@ -1,28 +1,24 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Product } from "../../interface/interface";
 import ProductCard from "../../Templates/CardProduct";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-const store = import.meta.env.VITE_STORE_SERVER;
+import { fetchProducts } from "../../../services/products.service";
 
 export default function AllProduct() {
   const Navigate = useNavigate();
-  const [data, setData] = useState<Product[]>();
+  const [products, setProduct] = useState<Product[]>();
+
+  async function getProduct(){
+    const data = await fetchProducts() 
+    if (data)
+    setProduct (data)}
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`  ${store}/api/products`);
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
+     getProduct();
   }, []);
 
-  if (!data) {
+  if (!products) {
     return (
       <div
         style={{
@@ -50,7 +46,7 @@ export default function AllProduct() {
           justifyContent: "center",
         }}
       >
-        {data.map((product: Product) => (
+        {products.map((product: Product) => (
           <ProductCard
             onClick={() => {
               Navigate(`/addBanner/${product.id}`);
