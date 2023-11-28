@@ -1,11 +1,4 @@
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-} from "@mui/material";
+import {AppBar,Toolbar,Button,Stack,Typography,TextField,} from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +7,7 @@ import UserProfile from "./UserActions";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { SearchResult } from "../../interface/interface";
+
 const api = import.meta.env.VITE_MY_SERVER;
 
 export default function Header() {
