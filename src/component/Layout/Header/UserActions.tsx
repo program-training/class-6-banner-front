@@ -1,34 +1,36 @@
 import { useState } from 'react';
+
 import { Box, IconButton, Menu, MenuItem, Popover, Typography, useTheme } from '@mui/material';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUser from '../../pages/EditUser/EditUser';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 const api = import.meta.env.VITE_MY_SERVER;
 
-
 const UserProfile = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<null| HTMLElement>(null);
   const theme = useTheme();
   const Navigate = useNavigate();
   const id = localStorage.getItem('userId')
   let userId: string
   if (id) {
+
     userId = JSON.parse(id)
   }
 
   const [editUserOpen, setEditUserOpen] = useState(false);
 
-  const handleOpenMenu = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+  const handleOpenMenu = (event:React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
 
   const handleEditProfile = () => {
     setEditUserOpen(true);
@@ -45,12 +47,11 @@ const UserProfile = () => {
         localStorage.removeItem('token')
         Navigate('/')
       }
-
-    } catch (error: any) {
-      window.alert(error.response.data.message)
-    }
-    handleCloseMenu();
-  };
+    } catch (error:unknown) {
+      if (error instanceof AxiosError) {
+      window.alert(error.response?.data.message)}}
+      finally{ handleCloseMenu()}
+    };
 
   const handleLogout = () => {
     localStorage.removeItem('username');

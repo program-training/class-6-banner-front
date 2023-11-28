@@ -2,8 +2,14 @@ import { useState, useEffect } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import {Card,CardMedia,CardContent,Typography,Container} from "@mui/material";
-import { Banner } from "../../interface";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Container,
+} from "@mui/material";
+import { Banner } from "../../interface/interface";
 
 const api = import.meta.env.VITE_MY_SERVER;
 
@@ -36,7 +42,6 @@ export default function BannerPage() {
         }}
       >
         <CircularProgress />
-        <h4>Loading...</h4>
       </div>
     );
   }
@@ -56,8 +61,6 @@ export default function BannerPage() {
             justifyContent: "space-between",
           }}
         >
-          {" "}
-          {/* שינוי גודל הכרטיס */}
           <div>
             <CardContent>
               <Typography
@@ -75,7 +78,9 @@ export default function BannerPage() {
               >
                 {banner.text}
               </Typography>
-              <Typography variant="body2">Category: {banner.category}</Typography>
+              <Typography variant="body2">
+                Category: {banner.category}
+              </Typography>
 
               <Typography variant="body2">Author: {banner.author}</Typography>
               <Typography variant="body2">Rating: {banner.rating}</Typography>
