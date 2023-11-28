@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const api = import.meta.env.VITE_MY_SERVER;
 
 export async function fetchBanners() {

@@ -1,26 +1,18 @@
 import { useState } from 'react';
-
 import { Box, IconButton, Menu, MenuItem, Popover, Typography, useTheme } from '@mui/material';
-
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUser from '../../pages/EditUser/EditUser';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
-const api = import.meta.env.VITE_MY_SERVER;
+import { deleteAccount } from '../../../services/users.service';
 
 const UserProfile = () => {
   const [anchorEl, setAnchorEl] = useState<null| HTMLElement>(null);
   const theme = useTheme();
   const Navigate = useNavigate();
-  const id = localStorage.getItem('userId')
-  let userId: string
-  if (id) {
-
-    userId = JSON.parse(id)
-  }
+ 
 
   const [editUserOpen, setEditUserOpen] = useState(false);
 
@@ -38,19 +30,8 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    try {
-      const response = await axios.delete(`${api}/api/users/delete/${userId}`);
-      if (response) {
-        window.alert('User successfully deleted')
-        localStorage.removeItem('userId')
-        localStorage.removeItem('username')
-        localStorage.removeItem('token')
-        Navigate('/')
-      }
-    } catch (error:unknown) {
-      if (error instanceof AxiosError) {
-      window.alert(error.response?.data.message)}}
-      finally{ handleCloseMenu()}
+      deleteAccount()
+       handleCloseMenu()
     };
 
   const handleLogout = () => {
