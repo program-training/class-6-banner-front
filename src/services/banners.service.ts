@@ -11,7 +11,6 @@ export async function fetchBanners() {
   }
 }
 
-
 export const deleteBanner = async (id: string) => {
   const token = localStorage.getItem("token")?.replace(/^"|"$/g, "");
   const options = {
@@ -64,12 +63,6 @@ export const updateBanner = async (id: string | undefined, requestData: EditRequ
   }
 };
 
-    } catch (error) {
-      console.error("Error deleting banner:", error);
-    }
-  };
-
-
  export const fetchBannerById = async (id:string) => {
     try {
       const response = await axios.get(`${api}/api/banners/${id}`);
@@ -78,4 +71,3 @@ export const updateBanner = async (id: string | undefined, requestData: EditRequ
       console.error("Error fetching banner:", error);
     }
   };
-
