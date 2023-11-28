@@ -64,10 +64,6 @@ export const updateBanner = async (id: string | undefined, requestData: EditRequ
   }
 };
 
-    } catch (error) {
-      console.error("Error deleting banner:", error);
-    }
-  };
 
 
  export const fetchBannerById = async (id:string) => {
