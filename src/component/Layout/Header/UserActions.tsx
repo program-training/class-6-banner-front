@@ -32,12 +32,12 @@ const UserProfile = () => {
   const handleDeleteAccount = async () => {
       deleteAccount()
        handleCloseMenu()
-       Navigate('/')
+       Navigate('/banner/')
     };
 
   const handleLogout = () => {
     localStorage.removeItem('username');
-    Navigate('/');
+    Navigate('/banner/');
   };
 
   const handleCloseEditUser = () => {

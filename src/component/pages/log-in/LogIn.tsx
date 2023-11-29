@@ -11,9 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "./functions";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 const api = import.meta.env.VITE_MY_SERVER;
 
 export default function LogIn() {
+
   const ls = localStorage.getItem("email")
   const Navigate = useNavigate()
   const [userData, setUserData] = React.useState({
@@ -34,7 +36,7 @@ export default function LogIn() {
           localStorage.setItem('username', JSON.stringify(response.data.user.username))
           localStorage.setItem('token', JSON.stringify(response.data.token))
           localStorage.setItem('userId', JSON.stringify(response.data.user._id))
-          Navigate('/userBanners')
+          Navigate('/banner/userBanners')
         }
 
       } catch (error) {
@@ -50,12 +52,12 @@ export default function LogIn() {
   };
 
   const handleRegistration = () => {
-    Navigate("/singIn")
+    Navigate("/banner/singIn")
   };
 
   const forgetPassword = () => {
     localStorage.setItem('email', JSON.stringify(userData.email))
-    Navigate("/forgetPassword")
+    Navigate("/banner/forgetPassword")
   };
 
   return (

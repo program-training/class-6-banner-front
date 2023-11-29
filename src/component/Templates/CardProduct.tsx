@@ -1,12 +1,6 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-  Stack,
-} from "@mui/material";
+import {Card,CardActionArea,CardContent,CardMedia,Typography,Stack,} from "@mui/material";
 import { Product } from "../interface/interface";
+
 interface ProductCardProps {
   product: Product;
   onClick: () => void;
