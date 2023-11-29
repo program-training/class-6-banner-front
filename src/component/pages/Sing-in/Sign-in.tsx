@@ -83,7 +83,7 @@ export default function SignIn() {
           setSuccessMessage("Sign-up successful!");
           setIsSuccess(true);
           setTimeout(() => {
-            Navigate("/");
+            Navigate("/banner/");
           }, 2000);
         }
       } catch (error) {
@@ -212,7 +212,7 @@ export default function SignIn() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => Navigate("/")}> back </Button>
+          <Button onClick={() => Navigate("/banner/")}> back </Button>
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>

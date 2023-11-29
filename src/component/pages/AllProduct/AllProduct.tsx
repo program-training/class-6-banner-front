@@ -1,24 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Product } from "../../interface/interface";
 import ProductCard from "../../Templates/CardProduct";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import { fetchProducts } from "../../../services/products.service";
+import { useAppDispatch, useAppSelector } from "../../../rtk/hooks";
+import { fetchProduct } from "../../../rtk/productslice";
 
 export default function AllProduct() {
+  const dispatch = useAppDispatch();
+  const { products, status, error } = useAppSelector((state) => state.products);
   const Navigate = useNavigate();
-  const [products, setProduct] = useState<Product[]>();
 
   async function getProduct(){
-    const data = await fetchProducts() 
-    if (data)
-    setProduct (data)}
+      await dispatch(fetchProduct())
+    }
 
   useEffect(() => {
      getProduct();
   }, []);
 
-  if (!products) {
+  if (status === "loading") {
     return (
       <div
         style={{
@@ -32,6 +33,11 @@ export default function AllProduct() {
       </div>
     );
   }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <Box>
       <Typography sx={{ textAlign: "center", margin: "30px" }} variant="h3">
@@ -49,7 +55,7 @@ export default function AllProduct() {
         {products.map((product: Product) => (
           <ProductCard
             onClick={() => {
-              Navigate(`/addBanner/${product.id}`);
+              Navigate(`/banner/addBanner/${product.id}`);
             }}
             key={product.id}
             product={product}

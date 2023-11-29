@@ -27,7 +27,7 @@ export default function Header() {
         label: banner.image.alt,
         id: banner._id,
       }));
-      setSearchResults(searchItems);
+      setSearchResults(searchItems)
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
@@ -52,14 +52,14 @@ export default function Header() {
   }, []);
 
   if (!userName) {
-    Navigate("/");
+    Navigate("/banner/");
   }
 
   const homePage = () => {
-    Navigate(`/userBanners`);
+    Navigate(`/banner/userBanners`);
   };
   const handleAddBanner = () => {
-    Navigate("/allProduct");
+    Navigate("/banner/allProduct");
   };
 
   return (
@@ -110,7 +110,7 @@ export default function Header() {
             }
             onChange={(_, value) => {
               if (typeof value !== "string" && value?.id) {
-                Navigate(`/bannerPage/${value.id}`);
+                Navigate(`/banner/bannerPage/${value.id}`);
               }
             }}
             onInputChange={(_, newInputValue) => {

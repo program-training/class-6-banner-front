@@ -14,15 +14,15 @@ function MyRouter(): JSX.Element {
   return (
     <Router>
       <Routes>
-          <Route path="/" element={<LogIn />} />
-          <Route path="/singIn" element={<SignIn />} />
-          <Route path="/forgetPassword" element={<ForgetPassword/>} />
+          <Route path="banner/" element={<LogIn />} />
+          <Route path="banner/singIn" element={<SignIn />} />
+          <Route path="banner/forgetPassword" element={<ForgetPassword/>} />
         <Route element={<Layout/>}>
-           <Route path="/bannerPage/:id" element={<BannerPage />} />
-           <Route path="/allProduct" element={<AllProduct />} />
-          <Route path="/addBanner/:id" element={<AddBanner />} />
-          <Route path="/userBanners" element={<UserBanners />} />
-          <Route path="/editBanner/:id" element={<EditBanner />} />
+           <Route path="banner/bannerPage/:id" element={<BannerPage />} />
+           <Route path="banner/allProduct" element={<AllProduct />} />
+          <Route path="banner/addBanner/:id" element={<AddBanner />} />
+          <Route path="banner/userBanners" element={<UserBanners />} />
+          <Route path="banner/editBanner/:id" element={<EditBanner />} />
          </Route>
       </Routes>
     </Router>

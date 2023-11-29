@@ -33,14 +33,16 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    deleteAccount(handleOpenModal)
-    handleCloseMenu()
-    
-  };
+
+      deleteAccount()
+       handleCloseMenu()
+       Navigate('/banner/')
+    };
+
 
   const handleLogout = () => {
     localStorage.removeItem('username');
-    Navigate('/');
+    Navigate('/banner/');
   };
 
   const handleCloseEditUser = () => {

@@ -140,7 +140,7 @@ export default function ForgetPassword() {
                {status}
              </DialogContentText>}
         <DialogActions>
-        <Button onClick={()=>Navigate('/')}> back </Button>
+        <Button onClick={()=>Navigate('/banner/')}> back </Button>
           <Button onClick={changePassword}>Change password</Button>
         </DialogActions>
       </Dialog>
