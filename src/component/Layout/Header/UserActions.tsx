@@ -32,6 +32,7 @@ const UserProfile = () => {
   const handleDeleteAccount = async () => {
       deleteAccount()
        handleCloseMenu()
+       Navigate('/')
     };
 
   const handleLogout = () => {

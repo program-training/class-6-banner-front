@@ -1,17 +1,15 @@
 import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
 import { User } from "../component/interface/interface";
 
 const api = import.meta.env.VITE_MY_SERVER;
 
-
 export const deleteAccount = async () => {
-  const Navigate = useNavigate();
     const id = localStorage.getItem('userId')
     if (!id) {
         return
     }
     const userId = JSON.parse(id)
+    console.log(userId,'jygkjg');
 
     try {
       const response = await axios.delete(`${api}/api/users/delete/${userId}`);
@@ -20,7 +18,6 @@ export const deleteAccount = async () => {
         localStorage.removeItem('userId')
         localStorage.removeItem('username')
         localStorage.removeItem('token')
-        Navigate('/')
       }
     } catch (error:unknown) {
       if (error instanceof AxiosError) {
@@ -53,8 +50,8 @@ export const handleUpdateUserData = async (userData:User) => {
                 "password": userData.password,
                 "isAdmin": userData.isAdmin
             })
-            return response.data
             localStorage.setItem('username', JSON.stringify(userData.username))
+            return response.data
         }
     } catch (error) {
         console.error('Error updating user details:', error);
