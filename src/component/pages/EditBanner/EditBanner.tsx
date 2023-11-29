@@ -78,7 +78,7 @@ const EditBanner: React.FC = () => {
       const response = await updateBanner(id, requestData, options);
       if (response.status < 210) {
         setStatus("Banner updated successfully!");
-        Navigate("/userBanners");
+        Navigate("/banner/userBanners");
       } else {
         console.error("Failed to update banner");
         setStatus("Failed to update banner! please try again!");

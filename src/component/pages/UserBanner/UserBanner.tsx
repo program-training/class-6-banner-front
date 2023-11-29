@@ -9,11 +9,11 @@ export default function UserBanners() {
 
   const dispatch = useAppDispatch();
   const { banners, status, error } = useAppSelector((state) => state.banners);
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
   
   const userName = localStorage.getItem("username");
   if (!userName) {
-    navigate("/");
+    Navigate("/banner/");
   }
 
   const deleteBannerById = async(id:string)=>{
@@ -78,7 +78,7 @@ export default function UserBanners() {
         {banners.map((card: Banner) => (
           <CardActionArea
             key={Date.now() * Math.random()}
-            onClick={() => navigate(`/bannerPage/${card.id}`)}
+            onClick={() => Navigate(`/banner/bannerPage/${card.id}`)}
             style={{ width: "300px", transition: "transform 0.3s ease" }}
           >
             <Card
@@ -123,7 +123,7 @@ export default function UserBanners() {
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/editBanner/${card._id}`);
+                    Navigate(`/banner/editBanner/${card._id}`);
                   }}
                   size="small"
                   sx={{
