@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Box, Button, TextField, Typography, InputLabel, CardMedia } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { schema } from './schema';
+import schema from './schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addBanner, uploadImageToCloudinary } from '../../../services/banners.service';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -66,7 +66,6 @@ const AddBanner: React.FC = () => {
 
             const response = await addBanner(requestData, options);
             if (response.status < 210) {
-                console.log('Banner added successfully');
                 setStatus('Banner added successfully!');
                 Navigate('/userBanners')
             } else {

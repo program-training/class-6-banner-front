@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const schema = yup.object().shape({
+const schema = yup.object().shape({
     id: yup.number(),
     image: yup.object().shape({
         url: yup.mixed().required('Image is required') as yup.Schema<File | null>,
@@ -13,3 +13,5 @@ export const schema = yup.object().shape({
     sale: yup.number().required('Sale is required'),
     category: yup.string().required('Category is required'),
 });
+
+export default schema;

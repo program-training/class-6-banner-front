@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BannerFormData } from '../../interface/interface';
-import { schema } from './schema';
+import schema from './schema';
 import { uploadImageToCloudinary, updateBanner } from '../../../services/banners.service';
 
 const api = import.meta.env.VITE_MY_SERVER;

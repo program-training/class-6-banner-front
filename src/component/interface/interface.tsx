@@ -90,3 +90,9 @@ export interface AddRequestData {
   category: string;
   productID: string | undefined;
 }
+
+export interface ErrorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  errorMessage: string;
+}
