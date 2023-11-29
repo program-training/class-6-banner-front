@@ -96,3 +96,9 @@ export interface ErrorModalProps {
   onClose: () => void;
   errorMessage: string;
 }
+
+export interface ModalInterface {
+  open: boolean;
+  message: string;
+  onClose: () => void;
+}
