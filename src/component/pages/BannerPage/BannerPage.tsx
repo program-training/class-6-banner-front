@@ -1,26 +1,15 @@
-import { useState, useEffect } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import {Card,CardMedia,CardContent,Typography,Container,} from "@mui/material";
-import { Banner } from "../../interface/interface";
-import { fetchBannerById } from "../../../services/banners.service";
+import { useAppSelector } from "../../../rtk/hooks";
 
 export default function BannerPage() {
-  const [banner, setBanner] = useState<Banner | null>(null);
+  const { banners, status, error } = useAppSelector((state) => state.banners);
   const { id } = useParams();
 
-  async function getBanner(id:string) {
-    const data = await fetchBannerById(id);
-    if (data) setBanner(data);
-  }
+  const banner = banners.find((banner) => banner.id === Number(id));
 
-  useEffect(() => {
-    if (id) {
-      getBanner(id);
-    }
-  }, [id]);
-
-  if (!banner) {
+  if (status === "loading") {
     return (
       <div
         style={{
@@ -33,6 +22,15 @@ export default function BannerPage() {
       </div>
     );
   }
+
+  if (status === "failed") {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!banner) {
+    return <div>Banner not found</div>;
+  }
+
   return (
     <Box>
       <Container
@@ -69,7 +67,6 @@ export default function BannerPage() {
               <Typography variant="body2">
                 Category: {banner.category}
               </Typography>
-
               <Typography variant="body2">Author: {banner.author}</Typography>
               <Typography variant="body2">Rating: {banner.rating}</Typography>
               {banner.sale && (
