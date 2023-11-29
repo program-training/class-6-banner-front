@@ -1,36 +1,30 @@
-import { useState, useEffect } from "react";
 import {Container,Typography,Card,CardActions,CardContent,CardActionArea,CardMedia,Button,CircularProgress,} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Banner } from "../../interface/interface";
-import { deleteBanner, fetchBanners } from "../../../services/banners.service";
+import { deleteBanner } from "../../../services/banners.service";
+import { useAppDispatch, useAppSelector } from "../../../rtk/hooks";
+import { setBanners } from "../../../rtk/bannersSlice";
 
 export default function UserBanners() {
+
+  const dispatch = useAppDispatch();
+  const { banners, status, error } = useAppSelector((state) => state.banners);
   const navigate = useNavigate();
-  const [banners, setBanners] = useState<Banner[] | null>(null);
   
   const userName = localStorage.getItem("username");
   if (!userName) {
     navigate("/");
   }
-  
-  async function getBanners(){
-    const data = await fetchBanners() 
-    if (data)
-    setBanners (data)}
-
-  useEffect(() => {
-    getBanners()
-  }, [banners]);
 
   const deleteBannerById = async(id:string)=>{
     const response = await deleteBanner(id)
     if (response && banners) {
-    setBanners(banners.filter((banner) => banner._id !== id))
+    dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
     }
   }
 
 
-  if (!banners) {
+  if (status === 'loading') {
     return (
       <div
         style={{
@@ -44,6 +38,11 @@ export default function UserBanners() {
       </div>
     );
   }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
 
   return (
     <Container
@@ -79,7 +78,7 @@ export default function UserBanners() {
         {banners.map((card: Banner) => (
           <CardActionArea
             key={Date.now() * Math.random()}
-            onClick={() => navigate(`/bannerPage/${card._id}`)}
+            onClick={() => navigate(`/bannerPage/${card.id}`)}
             style={{ width: "300px", transition: "transform 0.3s ease" }}
           >
             <Card

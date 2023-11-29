@@ -2,15 +2,6 @@ import axios, { AxiosRequestConfig } from "axios";
 import { EditRequestData, AddRequestData } from "../component/interface/interface";
 const api = import.meta.env.VITE_MY_SERVER;
 
-export async function fetchBanners() {
-  try {
-    const response = await axios.get(`${api}/api/banners`);
-    return response.data
-  } catch (error) {
-    console.error("Error fetching banners:", error);
-  }
-}
-
 export const deleteBanner = async (id: string) => {
   const token = localStorage.getItem("token")?.replace(/^"|"$/g, "");
   const options = {
@@ -63,11 +54,3 @@ export const updateBanner = async (id: string | undefined, requestData: EditRequ
   }
 };
 
- export const fetchBannerById = async (id:string) => {
-    try {
-      const response = await axios.get(`${api}/api/banners/${id}`);
-      return response.data
-    } catch (error) {
-      console.error("Error fetching banner:", error);
-    }
-  };
