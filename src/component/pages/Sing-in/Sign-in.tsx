@@ -8,16 +8,34 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../log-in/functions";
+import { IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { ErrorModalProps } from "../../interface/interface";
 const api = import.meta.env.VITE_MY_SERVER;
+
+const ErrorModal: React.FC<ErrorModalProps> = ({ isOpen, onClose, errorMessage }) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle color="red">Error!</DialogTitle>
+      <DialogContent>
+        <DialogContentText color="red">{errorMessage}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default function SignIn() {
   const Navigate = useNavigate();
   const [passwordVerification, setPasswordVerification] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
   const [user, setUser] = React.useState({
     username: "",
     email: "",
@@ -30,6 +48,19 @@ export default function SignIn() {
     password: "",
     passwordVerification: "",
   });
+
+  const [isErrorModalOpen, setIsErrorModalOpen] = React.useState(false);
+  const [errorModalMessage, setErrorModalMessage] = React.useState("");
+
+  const handleOpenErrorModal = (message: string) => {
+    setErrorModalMessage(message);
+    setIsErrorModalOpen(true);
+  };
+
+  const handleCloseErrorModal = () => {
+    setErrorModalMessage("");
+    setIsErrorModalOpen(false);
+  };
 
   const handleRegistration = async () => {
     localStorage.setItem("email", JSON.stringify(user.email));
@@ -67,9 +98,12 @@ export default function SignIn() {
             Navigate("/");
           }, 2000);
         }
-      } catch (error: any) {
-        window.alert(error.response.data.message);
-        console.error("Error during registration:", error);
+      } catch (error) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        const errorMessage =
+          axiosError.response?.data?.message || "An error occurred";
+        console.error("Error during registration:", axiosError);
+        handleOpenErrorModal(errorMessage);
       }
     }
   };
@@ -139,12 +173,21 @@ export default function SignIn() {
             margin="dense"
             id="password"
             label="Enter a password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             variant="standard"
             required
             error={Boolean(errorMessages.password)}
             helperText={errorMessages.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword((prevShowPassword) => !prevShowPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             onChange={(e) => {
@@ -155,20 +198,29 @@ export default function SignIn() {
             margin="dense"
             id="password"
             label="Please confirm the password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             variant="standard"
             required
             error={Boolean(errorMessages.passwordVerification)}
             helperText={errorMessages.passwordVerification}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword((prevShowPassword) => !prevShowPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           {isSuccess && (
-             <div style={{ display: "flex", alignItems: "center" }}>
-             <FontAwesomeIcon icon={faCheckCircle} style={{ color: "green", marginRight: "10px" }} />
-             <DialogContentText sx={{ color: "green" }}>
-               {successMessage}
-             </DialogContentText>
-           </div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FontAwesomeIcon icon={faCheckCircle} style={{ color: "green", marginRight: "10px" }} />
+              <DialogContentText sx={{ color: "green" }}>
+                {successMessage}
+              </DialogContentText>
+            </div>
           )}
         </DialogContent>
         <DialogActions>
@@ -176,6 +228,11 @@ export default function SignIn() {
           <Button onClick={handleRegistration}>Sign in</Button>
         </DialogActions>
       </Dialog>
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={handleCloseErrorModal}
+        errorMessage={errorModalMessage}
+      />
     </React.Fragment>
   );
 }
