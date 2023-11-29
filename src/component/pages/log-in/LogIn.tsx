@@ -20,7 +20,8 @@ export default function LogIn() {
     email: ls ? JSON.parse(ls) : "",
     password: '',
   });
-  const [showPassword ,setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [status, setStatus] = React.useState("");
 
   const handleLogIn = async () => {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
@@ -38,14 +39,14 @@ export default function LogIn() {
 
       } catch (error) {
         if (error instanceof AxiosError)
-          window.alert(error.response?.data.message)
+        setStatus(error.response?.data.message)
         console.error("Error during registration:", error);
       }
     } else if (validateEmail(userData.email) && !validatePassword(userData.password)) {
-      window.alert("סיסמא לא תקינה");
+      setStatus("סיסמא לא תקינה");
     } else if (!validateEmail(userData.email) && validatePassword(userData.password)) {
-      window.alert("מייל לא תקין");
-    } else window.alert("מייל וסיסמא לא תקינים");
+      setStatus("מייל לא תקין");
+    } else setStatus("מייל וסיסמא לא תקינים");
   };
 
   const handleRegistration = () => {
@@ -112,6 +113,10 @@ export default function LogIn() {
             }}
           />
         </DialogContent>
+        {status &&
+        <DialogContentText sx={{ color: "red", marginLeft: "20px" }}>
+               {status}
+             </DialogContentText>}
         <DialogActions>
           <Button onClick={forgetPassword}>forget password</Button>
           <Button onClick={handleRegistration}>Sign up</Button>
