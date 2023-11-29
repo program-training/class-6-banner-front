@@ -9,6 +9,8 @@ import { useState } from "react"
 import { validatePassword, validateEmail } from "../log-in/functions";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 const api = import.meta.env.VITE_MY_SERVER;
 
 
@@ -16,12 +18,12 @@ export default function ForgetPassword() {
 
   const Navigate = useNavigate()
   const ls = localStorage.getItem("email")
-  const [status ,setStatus] = useState()
+  const [status ,setStatus] = useState("")
   const [obj, setObg] = useState({
     email: ls ? JSON.parse(ls) : "",
     newPassword: ''
   })
-
+  const [showPassword ,setShowPassword] = React.useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -60,14 +62,13 @@ export default function ForgetPassword() {
       }
 
       else {
-        window.alert('try again');
+        setStatus('try again');
       }
     } catch (error:unknown) {
       if(error instanceof AxiosError)
       if (error.response?.data.message == "User not found") {
-        window.alert("משתמש לא קיים");
+        setStatus(error.response?.data.message);
       } else {
-        window.alert("משהו השתבש נסה שוב מאוחר יותר");
         console.error("Error during Change password:", error);
       }
     }
@@ -117,16 +118,25 @@ export default function ForgetPassword() {
             margin="dense"
             id="password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             variant="standard"
             required
             error={Boolean(passwordError)}
             helperText={passwordError}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword((prevShowPassword) => !prevShowPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         {status &&
-        <DialogContentText sx={{ color: "green" }}>
+        <DialogContentText sx={{ color: status === "Verification email sent. Please check your email to confirm password change." ? "green" : "red", marginLeft: "20px" }}>
                {status}
              </DialogContentText>}
         <DialogActions>

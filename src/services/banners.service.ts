@@ -54,5 +54,3 @@ export const updateBanner = async (id: string | undefined, requestData: EditRequ
   }
 };
 
-
-

@@ -163,12 +163,13 @@ export default function Header() {
               borderColor: "white",
               color: "white",
               marginLeft: ".5rem",
+              marginTop: ".6rem"
             }}
           >
             ADD BANNER
           </Button>
           <Stack
-            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+            sx={{ display: "flex", flexDirection: "row", alignItems: "center", marginLeft: ".5rem" }}
           >
             <HomeOutlinedIcon onClick={homePage} sx={{ color: "white" }} />
           </Stack>
