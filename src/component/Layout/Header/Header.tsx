@@ -41,7 +41,7 @@ export default function Header() {
         }
         const searchItems = response.data.map((banner) => ({
           label: banner.image.alt,
-          id: banner._id,
+          id: banner.id,
         }));
         setSearchResults(searchItems);
       } catch (error) {

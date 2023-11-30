@@ -68,6 +68,7 @@ const AddBanner: React.FC = () => {
             if (response.status < 210) {
                 setStatus('Banner added successfully!');
                 Navigate('/banner/userBanners')
+                window.location.reload();
             } else {
                 console.error('Failed to add banner');
                 setStatus('Failed to add banner! please try again!');
