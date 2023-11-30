@@ -33,10 +33,8 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
-
-      deleteAccount()
+      deleteAccount(handleOpenModal)
        handleCloseMenu()
-       Navigate('/banner/')
     };
 
 
@@ -56,7 +54,7 @@ const UserProfile = () => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    Navigate('/');
+    Navigate('/banner/');
   };
 
   return (
