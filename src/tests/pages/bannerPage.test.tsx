@@ -3,6 +3,9 @@ import { Provider } from "react-redux";
 import BannerPage from "../../component/pages/BannerPage/BannerPage";
 import { store } from "../../rtk/store";
 
+
+
+
 describe("bannerPage", () => {
   test("first test", () => {
     render(

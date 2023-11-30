@@ -5,7 +5,7 @@ import { Banner } from '../component/interface/interface';
 const api =import.meta.env.VITE_MY_SERVER;
 
 export const fetchBanners = createAsyncThunk('banners/fetchBanners', async () => {
-  const response = await axios.get(`${api}/api/banners`);
+  const response = await axios.get(`${api}/banners`);
   return response.data;
 });
 

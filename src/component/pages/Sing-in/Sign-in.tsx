@@ -78,7 +78,7 @@ export default function SignIn() {
       !passwordVerificationError
     ) {
       try {
-        const response = await axios.post(` ${api}/api/users/register`, user);
+        const response = await axios.post(` ${api}/users/register`, user);
         if (response) {
           setSuccessMessage("Sign-up successful!");
           setIsSuccess(true);
