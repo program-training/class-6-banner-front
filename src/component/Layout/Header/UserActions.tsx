@@ -7,19 +7,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import EditUser from '../../pages/EditUser/EditUser';
 import { useNavigate } from 'react-router-dom';
 import { deleteAccount } from '../../../services/users.service';
+import Modal from '../../Templates/Modal';
 
 const UserProfile = () => {
-  const [anchorEl, setAnchorEl] = useState<null| HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const theme = useTheme();
   const Navigate = useNavigate();
- 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
 
   const [editUserOpen, setEditUserOpen] = useState(false);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-  const handleOpenMenu = (event:React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -30,10 +33,10 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
-      deleteAccount()
+      deleteAccount(handleOpenModal)
        handleCloseMenu()
-       Navigate('/banner/')
     };
+
 
   const handleLogout = () => {
     localStorage.removeItem('username');
@@ -42,6 +45,16 @@ const UserProfile = () => {
 
   const handleCloseEditUser = () => {
     setEditUserOpen(false);
+  };
+
+  const handleOpenModal = (message: string) => {
+    setModalMessage(message);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    Navigate('/banner/');
   };
 
   return (
@@ -85,6 +98,11 @@ const UserProfile = () => {
           <EditUser />
         </Box>
       </Popover>
+      <Modal
+        open={modalOpen}
+        message={modalMessage}
+        onClose={handleCloseModal}
+      />
     </>
   );
 };

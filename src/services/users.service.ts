@@ -3,43 +3,42 @@ import { User } from "../component/interface/interface";
 
 const api = import.meta.env.VITE_MY_SERVER;
 
-export const deleteAccount = async () => {
+export const deleteAccount = async (showModal: (message: string) => void) => {
     const id = localStorage.getItem('userId')
     if (!id) {
         return
     }
     const userId = JSON.parse(id)
-    console.log(userId,'jygkjg');
 
     try {
-      const response = await axios.delete(`${api}/api/users/delete/${userId}`);
-      if (response) {
-        window.alert('User successfully deleted')
-        localStorage.removeItem('userId')
-        localStorage.removeItem('username')
-        localStorage.removeItem('token')
-      }
-    } catch (error:unknown) {
-      if (error instanceof AxiosError) {
-      window.alert(error.response?.data.message)}}
-      
-    };
+        const response = await axios.delete(`${api}/api/users/delete/${userId}`);
+        if (response) {
+            showModal('User successfully deleted')
+            localStorage.removeItem('userId')
+            localStorage.removeItem('username')
+            localStorage.removeItem('token')
+        }
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            showModal(error.response?.data.message)
+        }
+    }
+};
 
+export const fetchUserById = async () => {
+    try {
+        const id = localStorage.getItem('userId');
+        if (id) {
+            const userId = JSON.parse(id);
+            const response = await axios.get(`${api}/api/users/${userId}`)
+            return response.data;
+        }
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+    }
+}
 
-  export  const fetchUserById = async () => {
-      try {
-          const id = localStorage.getItem('userId');
-          if (id) {
-              const userId = JSON.parse(id);
-              const response = await axios.get(`${api}/api/users/${userId}`)
-              return response.data;
-          }
-      } catch (error) {
-          console.error('Error fetching user details:', error);
-      }
-  }
-
-export const handleUpdateUserData = async (userData:User) => {
+export const handleUpdateUserData = async (userData: User) => {
     try {
         const id = localStorage.getItem('userId');
         if (id) {

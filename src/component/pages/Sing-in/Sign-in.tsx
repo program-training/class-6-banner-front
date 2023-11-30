@@ -13,22 +13,10 @@ import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../log-in/functions";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { ErrorModalProps } from "../../interface/interface";
+import ErrorModal from "../../Templates/ErrorModal";
 const api = import.meta.env.VITE_MY_SERVER;
 
-const ErrorModal: React.FC<ErrorModalProps> = ({ isOpen, onClose, errorMessage }) => {
-  return (
-    <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle color="red">Error!</DialogTitle>
-      <DialogContent>
-        <DialogContentText color="red">{errorMessage}</DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
+
 
 export default function SignIn() {
   const Navigate = useNavigate();
