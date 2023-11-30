@@ -1,25 +1,48 @@
-import {Container,Typography,Card,CardActions,CardContent,CardActionArea,CardMedia,Button,CircularProgress,} from "@mui/material";
+import { Container, Typography, Card, CardActions, CardContent, CardActionArea, CardMedia, Button, CircularProgress, } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Banner } from "../../interface/interface";
 import { deleteBanner } from "../../../services/banners.service";
 import { useAppDispatch, useAppSelector } from "../../../rtk/hooks";
 import { setBanners } from "../../../rtk/bannersSlice";
+import React, { useState } from "react";
 
 export default function UserBanners() {
 
   const dispatch = useAppDispatch();
   const { banners, status, error } = useAppSelector((state) => state.banners);
   const Navigate = useNavigate();
-  
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+  const [sortBy, setSortBy] = useState<'rating' | 'createdAt' | 'sale'>('rating');
+
+  const sortedBanners = React.useMemo(() => {
+    const sorted = [...banners];
+    if (sortOrder) {
+      if (sortBy === 'rating') {
+        sorted.sort((a, b) => sortOrder === 'asc' ? a.rating - b.rating : b.rating - a.rating);
+      } else if (sortBy === 'createdAt') {
+        sorted.sort((a, b) => sortOrder === 'asc' ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else if (sortBy === 'sale') {
+        sorted.sort((a, b) => sortOrder === 'asc' ? (a.sale || 0) - (b.sale || 0) : (b.sale || 0) - (a.sale || 0));
+      }
+    }
+    return sorted;
+  }, [banners, sortOrder, sortBy]);
+
+
+  const toggleSort = (type: 'rating' | 'createdAt' | 'sale') => {
+    setSortBy(type);
+    setSortOrder(sortOrder === 'asc' || sortOrder === null ? 'desc' : 'asc');
+  };
+
   const userName = localStorage.getItem("username");
   if (!userName) {
     Navigate("/banner/");
   }
 
-  const deleteBannerById = async(id:string)=>{
+  const deleteBannerById = async (id: string) => {
     const response = await deleteBanner(id)
     if (response && banners) {
-    dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
+      dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
     }
   }
 
@@ -66,6 +89,51 @@ export default function UserBanners() {
       >
         User Banners
       </Typography>
+      <Button
+        onClick={() => toggleSort('rating')}
+        sx={{
+          marginBottom:"23px",
+          marginRight:"15px",
+
+          backgroundColor: sortBy === 'rating' ? '#00796b' : '#e0e0e0',
+          color: sortBy === 'rating' ? 'white' : 'black',
+          ':hover': {
+            backgroundColor: sortBy === 'rating' ? '#005662' : '#bdbdbd',
+          },
+        }}
+      >
+        sort by rating {sortBy === 'rating' && (sortOrder === 'asc' ? '↓' : '↑')}
+      </Button>
+      <Button
+        onClick={() => toggleSort('createdAt')}
+        sx={{
+          marginBottom:"23px",
+          marginRight:"15px",
+          backgroundColor: sortBy === 'createdAt' ? '#00796b' : '#e0e0e0',
+          color: sortBy === 'createdAt' ? 'white' : 'black',
+          ':hover': {
+            backgroundColor: sortBy === 'createdAt' ? '#005662' : '#bdbdbd',
+          },
+        }}
+      >
+        sort by Production date {sortBy === 'createdAt' && (sortOrder === 'asc' ? '↓' : '↑')}
+      </Button>
+      <Button
+        onClick={() => toggleSort('sale')}
+        sx={{
+          marginBottom:"23px",
+          backgroundColor: sortBy === 'sale' ? '#00796b' : '#e0e0e0',
+          color: sortBy === 'sale' ? 'white' : 'black',
+          ':hover': {
+            backgroundColor: sortBy === 'sale' ? '#005662' : '#bdbdbd',
+          },
+        }}
+      >
+        sort by sales {sortBy === 'sale' && (sortOrder === 'asc' ? '↓' : '↑')}
+      </Button>
+
+
+
       <div
         style={{
           display: "flex",
@@ -75,7 +143,7 @@ export default function UserBanners() {
           marginBottom: "3rem",
         }}
       >
-        {banners.map((card: Banner) => (
+        {sortedBanners.map((card: Banner) => (
           <CardActionArea
             key={Date.now() * Math.random()}
             onClick={() => Navigate(`/banner/bannerPage/${card.id}`)}
@@ -156,3 +224,6 @@ export default function UserBanners() {
     </Container>
   );
 }
+
+
+
