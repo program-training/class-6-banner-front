@@ -18,7 +18,7 @@ export default function Header() {
   const handleSearch = async (searchQuery: string) => {
     try {
       const response = await axios.get(
-        `${api}/api/banners?search=${searchQuery}`
+        `${api}/banners?search=${searchQuery}`
       );
       if (!Array.isArray(response.data)) {
         throw new Error("Response is not an array");
@@ -35,7 +35,7 @@ export default function Header() {
   useEffect(() => {
     const loadInitialSearchResults = async () => {
       try {
-        const response = await axios.get(`${api}/api/banners`);
+        const response = await axios.get(`${api}/banners`);
         if (!Array.isArray(response.data)) {
           throw new Error("Response is not an array");
         }

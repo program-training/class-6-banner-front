@@ -29,7 +29,7 @@ export default function LogIn() {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
       try {
         const response = await axios.post(
-          `${api}/api/users/login`,
+          `${api}/users/login`,
           userData
         );
         if (response.data) {

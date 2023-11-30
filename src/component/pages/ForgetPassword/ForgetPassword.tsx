@@ -54,7 +54,7 @@ export default function ForgetPassword() {
 
     try {
       const response = await axios.put(
-        `${api}/api/users/changepassword`,
+        `${api}/users/changepassword`,
         obj
       );
       if (response.data.message == "Verification email sent. Please check your email to confirm password change.") {

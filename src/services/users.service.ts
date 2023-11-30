@@ -11,7 +11,7 @@ export const deleteAccount = async (showModal: (message: string) => void) => {
     const userId = JSON.parse(id)
 
     try {
-        const response = await axios.delete(`${api}/api/users/delete/${userId}`);
+        const response = await axios.delete(`${api}/users/delete/${userId}`);
         if (response) {
             showModal('User successfully deleted')
             localStorage.removeItem('userId')
@@ -30,7 +30,7 @@ export const fetchUserById = async () => {
         const id = localStorage.getItem('userId');
         if (id) {
             const userId = JSON.parse(id);
-            const response = await axios.get(`${api}/api/users/${userId}`)
+            const response = await axios.get(`${api}/users/${userId}`)
             return response.data;
         }
     } catch (error) {
@@ -43,7 +43,7 @@ export const handleUpdateUserData = async (userData: User) => {
         const id = localStorage.getItem('userId');
         if (id) {
             const userId = JSON.parse(id);
-            const response = await axios.put(`${api}/api/users/update/${userId}`, {
+            const response = await axios.put(`${api}/users/update/${userId}`, {
                 "username": userData.username,
                 "email": userData.email,
                 "password": userData.password,

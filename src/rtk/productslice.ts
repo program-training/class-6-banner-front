@@ -5,7 +5,7 @@ import { Product } from '../component/interface/interface';
 const store = import.meta.env.VITE_STORE_SERVER;
 
 export const fetchProduct = createAsyncThunk('product/fetchProduct', async () => {
-  const response = await axios.get(`${store}/api/products`);
+  const response = await axios.get(`${store}/products`);
   return response.data;
 });
 

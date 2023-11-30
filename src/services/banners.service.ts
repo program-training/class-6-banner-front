@@ -11,7 +11,7 @@ export const deleteBanner = async (id: string) => {
   };
 
   try {
-    const response = await axios.delete(`${api}/api/banners/${id}`, options);
+    const response = await axios.delete(`${api}/banners/${id}`, options);
     if (response)
       return response
 
@@ -22,7 +22,7 @@ export const deleteBanner = async (id: string) => {
 
 export const addBanner = async (requestData: AddRequestData, options: AxiosRequestConfig<AddRequestData>) => {
   try {
-    const response = await axios.post(`${api}/api/banners`, requestData, options);
+    const response = await axios.post(`${api}/banners`, requestData, options);
     return response;
   } catch (error) {
     console.error('Error adding banner:', error);
@@ -46,7 +46,7 @@ export const uploadImageToCloudinary = async (imageFile: File) => {
 
 export const updateBanner = async (id: string | undefined, requestData: EditRequestData, options: AxiosRequestConfig<EditRequestData>) => {
   try {
-    const response = await axios.put(`${api}/api/banners/${id}`, requestData, options);
+    const response = await axios.put(`${api}/banners/${id}`, requestData, options);
     return response;
   } catch (error) {
     console.error('Error updating banner:', error);

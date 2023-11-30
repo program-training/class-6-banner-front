@@ -25,7 +25,7 @@ const EditBanner: React.FC = () => {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get(`${api}/api/banners/${id}`);
+        const response = await axios.get(`${api}/banners/${id}`);
         const bannerData = response.data;
         setImagePreview(bannerData.image.url);
         Object.entries(bannerData).forEach(([key, value]) => {
