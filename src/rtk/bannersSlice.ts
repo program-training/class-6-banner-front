@@ -30,6 +30,10 @@ const bannersSlice = createSlice({
     setBanners: (state, action) => {
         state.banners = action.payload;
       },
+    
+    addBannerRtk: (state, action) => {
+        state.banners.unshift(action.payload);
+      }
   },
   extraReducers: (builder) => {
     builder
@@ -49,5 +53,5 @@ const bannersSlice = createSlice({
 });
 
 
-export const { setBanners } = bannersSlice.actions;
+export const { setBanners,addBannerRtk } = bannersSlice.actions;
 export default bannersSlice.reducer;

@@ -42,8 +42,8 @@ export default function UserBanners() {
   const deleteBannerById = async (id: string) => {
     const response = await deleteBanner(id)
     if (response && banners) {
-      dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
-    }
+    dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
+    } 
   }
 
 
@@ -130,7 +130,7 @@ export default function UserBanners() {
         }}
       >
         sort by sales {sortBy === 'sale' && (sortOrder === 'asc' ? '↓' : '↑')}
-      </Button>
+      </Button> 
 
 
 
@@ -198,8 +198,7 @@ export default function UserBanners() {
                     backgroundColor: "#009688",
                     color: "white",
                     "&:hover": { backgroundColor: "#00796b" },
-                  }}
-                >
+                  }}           >
                   Edit
                 </Button>
                 <Button
@@ -212,8 +211,7 @@ export default function UserBanners() {
                   onClick={(e) => {
                     deleteBannerById(card._id);
                     e.stopPropagation();
-                  }}
-                >
+                  }}>
                   Delete
                 </Button>
               </CardActions>

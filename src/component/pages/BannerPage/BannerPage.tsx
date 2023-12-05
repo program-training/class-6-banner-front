@@ -6,7 +6,6 @@ import { useAppSelector } from "../../../rtk/hooks";
 export default function BannerPage() {
   const { banners, status, error } = useAppSelector((state) => state.banners);
   const { id } = useParams();
-  console.log(id);
 
   const banner = banners.find((banner) => banner.id === Number(id));
 

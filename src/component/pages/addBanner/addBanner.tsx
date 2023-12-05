@@ -6,8 +6,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { addBanner, uploadImageToCloudinary } from '../../../services/banners.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BannerFormData } from '../../interface/interface';
+import { useAppDispatch } from '../../../rtk/hooks';
+import { addBannerRtk } from '../../../rtk/bannersSlice';
 
 const AddBanner: React.FC = () => {
+    const dispatch = useAppDispatch()
     const Navigate = useNavigate()
     const [image, setImage] = useState<string | ArrayBuffer | null>(null);
     const [status, setStatus] = useState('');
@@ -68,6 +71,7 @@ const AddBanner: React.FC = () => {
             if (response.status < 210) {
                 setStatus('Banner added successfully!');
                 Navigate('/banner/userBanners')
+                dispatch(addBannerRtk(requestData))
             } else {
                 console.error('Failed to add banner');
                 setStatus('Failed to add banner! please try again!');
