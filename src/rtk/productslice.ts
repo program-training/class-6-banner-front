@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Product } from '../component/interface/interface';
 
-const store = import.meta.env.VITE_STORE_SERVER;
+const api = import.meta.env.VITE_MY_SERVER
 
 export const fetchProduct = createAsyncThunk('product/fetchProduct', async () => {
-  const response = await axios.get(`${store}/products`);
+  const response = await axios.get(`${api}/products`);
   return response.data;
 });
 

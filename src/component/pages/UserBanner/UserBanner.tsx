@@ -130,7 +130,7 @@ export default function UserBanners() {
         }}
       >
         sort by sales {sortBy === 'sale' && (sortOrder === 'asc' ? '↓' : '↑')}
-      </Button>
+      </Button> 
 
 
 
