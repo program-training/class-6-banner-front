@@ -8,6 +8,7 @@ import ForgetPassword from "../pages/ForgetPassword/ForgetPassword";
 import AllProduct from "../pages/AllProduct/AllProduct";
 import AddBanner from "../pages/addBanner/addBanner";
 import Layout from "../Layout/Layout";
+import Charts from "../pages/chartPage/chartPage";
 
 function MyRouter(): JSX.Element {
   return (
@@ -22,6 +23,7 @@ function MyRouter(): JSX.Element {
           <Route path="banner/addBanner/:id" element={<AddBanner />} />
           <Route path="banner/userBanners" element={<UserBanners />} />
           <Route path="banner/editBanner/:id" element={<EditBanner />} />
+          <Route path="banner/chartPage" element={<Charts />} />
          </Route>
       </Routes>
     </Router>
