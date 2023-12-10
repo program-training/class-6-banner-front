@@ -84,9 +84,6 @@ export default function Statistic() {
                         <Tooltip />
                         <Legend />
                         <Bar dataKey="clicks" fill="#5e35b1" />
-                        <text x="50%" y="10" textAnchor="middle" dominantBaseline="middle" fill="#000000" fontSize="16"> 
-                            Popular Banner Views
-                        </text>
                     </BarChart>
                 </ResponsiveContainer>
             </Box>
