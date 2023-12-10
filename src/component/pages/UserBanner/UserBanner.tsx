@@ -1,14 +1,16 @@
-import { Container, Typography, Card, CardActions, CardContent, CardActionArea, CardMedia, Button, CircularProgress, } from "@mui/material";
+import { Container, Typography, Card, CardActions, CardContent, CardActionArea, CardMedia, Button, CircularProgress, Modal, Fade, } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Banner } from "../../interface/interface";
 import { deleteBanner } from "../../../services/banners.service";
 import { useAppDispatch, useAppSelector } from "../../../rtk/hooks";
 import { setBanners } from "../../../rtk/bannersSlice";
+import Statistic from "../../graph/graph2";
 import React, { useState } from "react";
 
 export default function UserBanners() {
 
   const dispatch = useAppDispatch();
+  const [openModal, setOpenModal] = useState(false);
   const { banners, status, error } = useAppSelector((state) => state.banners);
   const Navigate = useNavigate();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
@@ -42,10 +44,17 @@ export default function UserBanners() {
   const deleteBannerById = async (id: string) => {
     const response = await deleteBanner(id)
     if (response && banners) {
-    dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
-    } 
+      dispatch(setBanners(banners.filter((banner) => banner._id !== id)))
+    }
   }
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   if (status === 'loading') {
     return (
@@ -92,8 +101,8 @@ export default function UserBanners() {
       <Button
         onClick={() => toggleSort('rating')}
         sx={{
-          marginBottom:"23px",
-          marginRight:"15px",
+          marginBottom: "23px",
+          marginRight: "15px",
 
           backgroundColor: sortBy === 'rating' ? '#00796b' : '#e0e0e0',
           color: sortBy === 'rating' ? 'white' : 'black',
@@ -107,8 +116,8 @@ export default function UserBanners() {
       <Button
         onClick={() => toggleSort('createdAt')}
         sx={{
-          marginBottom:"23px",
-          marginRight:"15px",
+          marginBottom: "23px",
+          marginRight: "15px",
           backgroundColor: sortBy === 'createdAt' ? '#00796b' : '#e0e0e0',
           color: sortBy === 'createdAt' ? 'white' : 'black',
           ':hover': {
@@ -121,7 +130,7 @@ export default function UserBanners() {
       <Button
         onClick={() => toggleSort('sale')}
         sx={{
-          marginBottom:"23px",
+          marginBottom: "23px",
           backgroundColor: sortBy === 'sale' ? '#00796b' : '#e0e0e0',
           color: sortBy === 'sale' ? 'white' : 'black',
           ':hover': {
@@ -130,9 +139,49 @@ export default function UserBanners() {
         }}
       >
         sort by sales {sortBy === 'sale' && (sortOrder === 'asc' ? '↓' : '↑')}
-      </Button> 
+      </Button>
 
+      <Button onClick={handleOpenModal} sx={{ marginBottom: '23px', backgroundColor: '#00796b', color: 'white', marginLeft: '400px' }}>
+        Graph Popular Banners
+      </Button>
 
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+      >
+        <Fade in={openModal}>
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '10px',
+              width: '80%',
+              margin: 'auto',
+              marginTop: '50px',
+              height: '80%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              background: '#cdfffb'
+            }}
+          >
+            <Typography variant="h5"
+              sx={{
+                borderBottom: '2px solid #b2dfdb',
+                paddingBottom: '5px',
+                marginBottom: '15px',
+              }}
+            >The most popular banners</Typography>
+            <Statistic />
+            <Button onClick={handleCloseModal} sx={{ marginTop: '20px', alignSelf: 'flex-end' }}>
+              Close
+            </Button>
+          </div>
+        </Fade>
+      </Modal>
 
       <div
         style={{
