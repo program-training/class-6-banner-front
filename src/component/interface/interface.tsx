@@ -102,3 +102,18 @@ export interface ModalInterface {
   message: string;
   onClose: () => void;
 }
+
+
+export interface ClickData {
+  _id: string;
+  banner_id: string;
+  clicks?: { [key: string]: number };
+}
+export interface ChartData {
+  banner_id: string;
+  clicks: number;
+}
+export interface ChartData2 {
+  date: string;
+  clicks: number;
+}

@@ -86,7 +86,8 @@ export default function BannerPage() {
               {banner._id && (
                 <Typography variant="body2">Banner ID: {banner._id}</Typography>
               )}
-              <Button onClick={goToGraph}>See graph number of views</Button>
+              <br/>
+              <Button onClick={goToGraph}> Number of views</Button>
             </CardContent>
           </div>
           <div style={{ width: "50%", height: "auto", margin: "0.5rem" }}>

@@ -1,20 +1,13 @@
 import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-
-interface ClickData {
-    _id: string;
-    banner_id: string;
-    clicks?: { [key: string]: number };
-}
-interface ChartData {
-    banner_id: string;
-    clicks: number;
-}
+const api = import.meta.env.VITE_MY_SERVER;
+import { ClickData } from '../interface/interface';
+import { ChartData } from '../interface/interface';
 
 async function getBannerName(bannerId:string) {
     try {
-        const response = await fetch(`https://serverbanners.onrender.com/banners/${bannerId}`);
+        const response = await fetch(`${api}/banners/${bannerId}`);
         const bannerData = await response.json();
         return bannerData.image.alt;
     } catch (error) {
