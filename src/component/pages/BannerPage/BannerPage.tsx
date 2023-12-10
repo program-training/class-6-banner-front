@@ -1,11 +1,13 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import {Card,CardMedia,CardContent,Typography,Container,} from "@mui/material";
 import { useAppSelector } from "../../../rtk/hooks";
+import { useNavigate } from 'react-router-dom';
 
 export default function BannerPage() {
   const { banners, status, error } = useAppSelector((state) => state.banners);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const banner = banners.find((banner) => banner.id === Number(id));
 
@@ -30,6 +32,9 @@ export default function BannerPage() {
   if (!banner) {
     return <div>Banner not found</div>;
   }
+  const goToGraph = () => {
+    navigate(`/banner/graph/${banner._id}`);
+};
 
   return (
     <Box>
@@ -81,6 +86,7 @@ export default function BannerPage() {
               {banner._id && (
                 <Typography variant="body2">Banner ID: {banner._id}</Typography>
               )}
+              <Button onClick={goToGraph}>See graph number of views</Button>
             </CardContent>
           </div>
           <div style={{ width: "50%", height: "auto", margin: "0.5rem" }}>
