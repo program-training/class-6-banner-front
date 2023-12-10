@@ -17,6 +17,7 @@ export default function Statistic() {
                     date: date,
                     clicks: result.clicks[date]
                 }));
+                formattedData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                 setData(formattedData);
             } catch (error) {
                 console.error('Error fetching data:', error);

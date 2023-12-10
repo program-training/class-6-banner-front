@@ -11,7 +11,6 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function UserBanners() {
 
-
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
   const { banners, status, error } = useAppSelector((state) => state.banners);
@@ -46,7 +45,6 @@ export default function UserBanners() {
       Navigate("/banner/");
     }
   }, [Navigate]);
-
 
   const deleteBannerById = async (id: string) => {
     const response = await deleteBanner(id)
