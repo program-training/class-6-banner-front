@@ -117,3 +117,7 @@ export interface ChartData2 {
   date: string;
   clicks: number;
 }
+export interface Banner2 {
+  image: { alt: string };
+  sale: number;
+}

@@ -5,7 +5,9 @@ import { deleteBanner } from "../../../services/banners.service";
 import { useAppDispatch, useAppSelector } from "../../../rtk/hooks";
 import { setBanners } from "../../../rtk/bannersSlice";
 import Statistic from "../../graph/graph2";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function UserBanners() {
 
@@ -15,6 +17,7 @@ export default function UserBanners() {
   const Navigate = useNavigate();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
   const [sortBy, setSortBy] = useState<'rating' | 'createdAt' | 'sale'>('rating');
+  const [sliderIndex, setSliderIndex] = useState(0);
 
   const sortedBanners = React.useMemo(() => {
     const sorted = [...banners];
@@ -36,10 +39,12 @@ export default function UserBanners() {
     setSortOrder(sortOrder === 'asc' || sortOrder === null ? 'desc' : 'asc');
   };
 
-  const userName = localStorage.getItem("username");
-  if (!userName) {
-    Navigate("/banner/");
-  }
+  useEffect(() => {
+    const userName = localStorage.getItem("username");
+    if (!userName) {
+      Navigate("/banner/");
+    }
+  }, [Navigate]);
 
   const deleteBannerById = async (id: string) => {
     const response = await deleteBanner(id)
@@ -74,6 +79,17 @@ export default function UserBanners() {
   if (status === 'failed') {
     return <div>Error: {error}</div>;
   }
+  const bannersPerPage = 6;
+  const displayedBanners = sortedBanners.slice(sliderIndex, sliderIndex + bannersPerPage);
+
+  const handleNext = () => {
+    setSliderIndex((prevIndex) =>
+      Math.min(prevIndex + bannersPerPage, sortedBanners.length - bannersPerPage));
+  };
+
+  const handlePrev = () => {
+    setSliderIndex((prevIndex) => Math.max(prevIndex - bannersPerPage, 0));
+  };
 
 
   return (
@@ -182,6 +198,7 @@ export default function UserBanners() {
           </div>
         </Fade>
       </Modal>
+     
 
       <div
         style={{
@@ -192,7 +209,7 @@ export default function UserBanners() {
           marginBottom: "3rem",
         }}
       >
-        {sortedBanners.map((card: Banner) => (
+        {displayedBanners.map((card: Banner) => (
           <CardActionArea
             key={Date.now() * Math.random()}
             onClick={() => Navigate(`/banner/bannerPage/${card.id}`)}
@@ -267,6 +284,22 @@ export default function UserBanners() {
             </Card>
           </CardActionArea>
         ))}
+        
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}
+      >
+      <Button onClick={handlePrev} disabled={sliderIndex === 0}>
+        <ArrowBackIosIcon /> Prev Banners
+      </Button>
+      <Button onClick={handleNext} disabled={sliderIndex >= sortedBanners.length - bannersPerPage}>
+        Next Banners <ArrowForwardIosIcon />
+      </Button>
       </div>
     </Container>
   );

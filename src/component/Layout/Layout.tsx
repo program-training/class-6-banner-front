@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Header from './Header/Header'
-import Footer from './Footer/Footer' 
+import Footer from './Footer/Footer'
 
 function Layout() {
     return (
@@ -9,14 +9,14 @@ function Layout() {
                 <Header />
                 <div style={{
                     display: "flex",
-                    flexDirection: "column", 
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    flex: 1, 
+                    flex: 1,
                 }}>
                     <Outlet />
                 </div>
-                <Footer /> 
+                <Footer />
             </div>
         </div>
     )
