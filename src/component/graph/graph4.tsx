@@ -1,13 +1,12 @@
-import { Box, Grid, Slider, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, Select, SelectChangeEvent, Slider, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { ClickData } from '../interface/interface';
 import { ChartData } from '../interface/interface';
 // const api = import.meta.env.VITE_MY_SERVER;
 
 async function getBannerName(bannerId: string) {
     try {
-        const response = await fetch(`https://serverbanners.onrender.com/banners/${bannerId}`);
+        const response = await fetch(`http://localhost:8008/banners/${bannerId}`);
         const bannerData = await response.json();
         return bannerData.image.alt;
     } catch (error) {
@@ -15,19 +14,28 @@ async function getBannerName(bannerId: string) {
         return '';
     }
 }
+interface Click {
+    date: string;
+    count: number;
+}
 
-async function getTopBannerIdsWithClicks(url: string): Promise<Array<{ banner_id: string, clicks: number }>> {
+interface ClickData {
+    _id: string;
+    banner_id: string;
+    clicks: Click[];
+}
+
+async function getTopBannerIdsWithClicks(url: string, selectedDates: string[]): Promise<Array<{ banner_id: string, clicks: number }>> {
     try {
         const response = await fetch(url);
         const data: ClickData[] = await response.json();
 
         const clickCounts: { [key: string]: number } = data.reduce((acc: { [key: string]: number }, item: ClickData) => {
-            if (item.clicks) {
-                Object.keys(item.clicks).forEach((date: string) => {
-                    if (item.clicks)
-                        acc[item.banner_id] = (acc[item.banner_id] || 0) + item.clicks[date];
-                });
-            }
+            item.clicks.forEach((click) => {
+                if (selectedDates.includes(click.date)) {
+                    acc[item.banner_id] = (acc[item.banner_id] || 0) + click.count;
+                }
+            });
             return acc;
         }, {});
 
@@ -50,29 +58,49 @@ async function getTopBannerIdsWithClicks(url: string): Promise<Array<{ banner_id
     }
 }
 export default function Statistic() {
-
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [numBannersToShow, setNumBannersToShow] = useState<number>(5);
+    const [selectedDate, setSelectedDate] = useState<string>('');
+    const [availableDates, setAvailableDates] = useState<string[]>([]);
+
 
     useEffect(() => {
-        getTopBannerIdsWithClicks(`https://serverbanners.onrender.com/bannerclicks/`)
+        fetch(`http://localhost:8008/bannerclicks/`)
+            .then(response => response.json())
             .then(data => {
-                const sortedBanners = data.sort((a, b) => b.clicks - a.clicks);
-                const topBanners = sortedBanners.slice(0, numBannersToShow);
-                setChartData(topBanners);
+                const dates = new Set<string>();
+                data.forEach((clickData: ClickData) => {
+                    clickData.clicks.forEach(click => dates.add(click.date));
+                });
+                setAvailableDates(Array.from(dates));
             });
-    }, [numBannersToShow]);
+    }, []);
+
+    useEffect(() => {
+        if (selectedDate) {
+            getTopBannerIdsWithClicks(`http://localhost:8008/bannerclicks/`, [selectedDate])
+                .then(data => {
+                    const sortedBanners = data.sort((a, b) => b.clicks - a.clicks);
+                    const topBanners = sortedBanners.slice(0, numBannersToShow);
+                    setChartData(topBanners);
+                });
+        }
+    }, [numBannersToShow, selectedDate]);
 
     const handleSliderChange = (event: Event, value: number | number[]) => {
         setNumBannersToShow(value as number);
     };
+    const handleDateChange = (event: SelectChangeEvent<string>) => {
+        setSelectedDate(event.target.value);
+    };
+    
 
     return (
         <Box sx={{ width: '100vw', height: '100vh' }}>
             <Grid container spacing={0} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '2em' }}>
                 <Grid item xs={8}>
                     <Box sx={{ height: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" gutterBottom>
                             Select Number of Popular Banners:
                         </Typography>
                         <Slider
@@ -97,13 +125,26 @@ export default function Statistic() {
                                 }}
                             >
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="bannername" tick={{ fill: '#black', fontSize: 12 }} tickFormatter={(value) => value.length > 10 ? `${value.substring(0, 10)}...` : value} />
+                                <XAxis dataKey="bannername" tick={{ fill: '#black', fontSize: 12 }} tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}...` : value} />
                                 <YAxis tick={{ fill: '#black' }} axisLine={{ stroke: 'black' }} />
                                 <Tooltip />
                                 <Legend />
                                 <Bar dataKey="clicks" fill="#5e35b1" />
                             </BarChart>
                         </ResponsiveContainer>
+                        <Select
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                            <MenuItem value="">
+                                <em>Choose Day</em>
+                            </MenuItem>
+                            {availableDates.map((date) => (
+                                <MenuItem key={date} value={date}>{date}</MenuItem>
+                            ))}
+                        </Select>
                     </Box>
                 </Grid>
             </Grid>

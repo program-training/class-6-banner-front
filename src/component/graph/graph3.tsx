@@ -84,7 +84,6 @@ export default function Statistic() {
                     >
                         Top Sales
                     </Button>
-
                 </Grid>
             </Grid>
         </Box>
