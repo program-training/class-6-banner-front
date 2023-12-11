@@ -1,7 +1,7 @@
 import { Box, Grid, MenuItem, Select, SelectChangeEvent, Slider, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { ChartData } from '../interface/interface';
+import { ChartData, Click, ClickData3 } from '../interface/interface';
 // const api = import.meta.env.VITE_MY_SERVER;
 
 async function getBannerName(bannerId: string) {
@@ -14,24 +14,15 @@ async function getBannerName(bannerId: string) {
         return '';
     }
 }
-interface Click {
-    date: string;
-    count: number;
-}
 
-interface ClickData {
-    _id: string;
-    banner_id: string;
-    clicks: Click[];
-}
 
 async function getTopBannerIdsWithClicks(url: string, selectedDates: string[]): Promise<Array<{ banner_id: string, clicks: number }>> {
     try {
         const response = await fetch(url);
-        const data: ClickData[] = await response.json();
+        const data: ClickData3[] = await response.json();
 
-        const clickCounts: { [key: string]: number } = data.reduce((acc: { [key: string]: number }, item: ClickData) => {
-            item.clicks.forEach((click) => {
+        const clickCounts: { [key: string]: number } = data.reduce((acc: { [key: string]: number }, item: ClickData3) => {
+            item.clicks.forEach((click: Click) => {
                 if (selectedDates.includes(click.date)) {
                     acc[item.banner_id] = (acc[item.banner_id] || 0) + click.count;
                 }
@@ -57,7 +48,7 @@ async function getTopBannerIdsWithClicks(url: string, selectedDates: string[]): 
         return [];
     }
 }
-export default function Statistic() {
+export default function Statistic3() {
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [numBannersToShow, setNumBannersToShow] = useState<number>(5);
     const [selectedDate, setSelectedDate] = useState<string>('');
@@ -69,7 +60,7 @@ export default function Statistic() {
             .then(response => response.json())
             .then(data => {
                 const dates = new Set<string>();
-                data.forEach((clickData: ClickData) => {
+                data.forEach((clickData: ClickData3) => {
                     clickData.clicks.forEach(click => dates.add(click.date));
                 });
                 setAvailableDates(Array.from(dates));
@@ -93,61 +84,97 @@ export default function Statistic() {
     const handleDateChange = (event: SelectChangeEvent<string>) => {
         setSelectedDate(event.target.value);
     };
-    
+
 
     return (
-        <Box sx={{ width: '100vw', height: '100vh' }}>
-            <Grid container spacing={0} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '2em' }}>
-                <Grid item xs={8}>
-                    <Box sx={{ height: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <Typography variant="h6" gutterBottom>
-                            Select Number of Popular Banners:
-                        </Typography>
-                        <Slider
-                            value={numBannersToShow}
-                            min={3}
-                            max={7}
-                            step={1}
-                            valueLabelDisplay="auto"
-                            onChange={handleSliderChange}
-                            sx={{ width: '30%' }}
-                        />
-                        <ResponsiveContainer width="90%" height="90%" style={{ backgroundColor: '#b2dfdb', padding: '1em', borderRadius: '0.8em', border: 'solid black 0.1em' }}>
+        <Box sx={{ width: '100vw', height: '100vh', p: 3, bgcolor: 'background.default' }}>
+            <Typography variant="h4" align="center" sx={{ mb: 4, fontWeight: 'bold' }}>
+                Analysis of clicks on banners
+            </Typography>
+
+            <Grid container spacing={2} justifyContent="center">
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ bgcolor: 'white', p: 2, borderRadius: 2, boxShadow: 1, mb: 3 }}>
+                        <ResponsiveContainer width="100%" height={300}>
                             <BarChart
-                                width={300}
-                                height={300}
                                 data={chartData}
-                                margin={{
-                                    top: 10,
-                                    right: 30,
-                                    left: 20,
-                                    bottom: 30,
-                                }}
+                                margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
                             >
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="bannername" tick={{ fill: '#black', fontSize: 12 }} tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}...` : value} />
-                                <YAxis tick={{ fill: '#black' }} axisLine={{ stroke: 'black' }} />
+                                <XAxis
+                                    dataKey="bannername"
+                                    tick={{ fill: 'black', fontSize: 12 }}
+                                    tickFormatter={(value) => value.length > 8 ? `${value.substring(0, 8)}...` : value}
+                                />
+                                <YAxis tick={{ fill: 'black' }} axisLine={{ stroke: 'black' }} />
                                 <Tooltip />
-                                <Legend />
+                                <Legend verticalAlign="top" height={36} />
                                 <Bar dataKey="clicks" fill="#5e35b1" />
                             </BarChart>
                         </ResponsiveContainer>
-                        <Select
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                        >
-                            <MenuItem value="">
-                                <em>Choose Day</em>
-                            </MenuItem>
-                            {availableDates.map((date) => (
-                                <MenuItem key={date} value={date}>{date}</MenuItem>
-                            ))}
-                        </Select>
                     </Box>
+
+                    <Typography variant="h6" gutterBottom>
+                        Choose Date:
+                    </Typography>
+                    <Select
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        sx={{ mb: 3, width: '100%' }}
+                    >
+                        <MenuItem value="">
+                            <em>Choose Day </em>
+                        </MenuItem>
+                        {availableDates.map((date) => (
+                            <MenuItem key={date} value={date}>{date}</MenuItem>
+                        ))}
+                    </Select>
+
+                    
+                    <Slider
+    value={numBannersToShow}
+    min={3}
+    max={7}
+    step={1}
+    valueLabelDisplay="auto"
+    onChange={handleSliderChange}
+    sx={{
+        width: '60%',
+        color: '#5e35b1', 
+        '& .MuiSlider-thumb': {
+            width: 28,
+            height: 28,
+            backgroundColor: '#fff',
+            border: '2px solid currentColor',
+            '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                boxShadow: 'inherit',
+            },
+        },
+        '& .MuiSlider-track': {
+            height: 10,
+            borderRadius: 4,
+        },
+        '& .MuiSlider-rail': {
+            height: 10,
+            borderRadius: 4,
+        },
+        '& .MuiSlider-mark': {
+            backgroundColor: '#bfbfbf',
+            height: 8,
+            width: 1,
+            '&.MuiSlider-markActive': {
+                opacity: 1,
+                backgroundColor: 'currentColor',
+            },
+        },
+    }}
+/>
+
                 </Grid>
             </Grid>
         </Box>
+
     );
 }
