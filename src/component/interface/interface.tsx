@@ -121,3 +121,14 @@ export interface Banner2 {
   image: { alt: string };
   sale: number;
 }
+
+export interface Click {
+  date: string;
+  count: number;
+}
+
+export interface ClickData3 {
+  _id: string;
+  banner_id: string;
+  clicks: Click[];
+}

@@ -181,7 +181,10 @@ export default function UserBanners() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              background: '#cdfffb'
+              justifyContent: 'space-between',
+              background: '#cdfffb',
+              boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+              overflow: 'hidden'
             }}
           >
             <Typography variant="h5"
@@ -189,16 +192,24 @@ export default function UserBanners() {
                 borderBottom: '2px solid #b2dfdb',
                 paddingBottom: '5px',
                 marginBottom: '15px',
+                fontWeight: 'bold',
+                color: '#333',
+                textAlign: 'center'
               }}
             >The most popular banners</Typography>
             <Statistic />
-            <Button onClick={handleCloseModal} sx={{ marginTop: '20px', alignSelf: 'flex-end' }}>
-              Close
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '10px' }}>
+              <Button onClick={handleCloseModal} variant="outlined" color="secondary">
+                Close
+              </Button>
+              <Button onClick={() => Navigate('/banner/graphs')} variant="contained" color="primary">
+                More Graphs
+              </Button>
+            </div>
           </div>
         </Fade>
       </Modal>
-     
+
 
       <div
         style={{
@@ -284,7 +295,7 @@ export default function UserBanners() {
             </Card>
           </CardActionArea>
         ))}
-        
+
       </div>
       <div
         style={{
@@ -294,12 +305,12 @@ export default function UserBanners() {
           marginBottom: "1rem",
         }}
       >
-      <Button onClick={handlePrev} disabled={sliderIndex === 0}>
-        <ArrowBackIosIcon /> Prev Banners
-      </Button>
-      <Button onClick={handleNext} disabled={sliderIndex >= sortedBanners.length - bannersPerPage}>
-        Next Banners <ArrowForwardIosIcon />
-      </Button>
+        <Button onClick={handlePrev} disabled={sliderIndex === 0}>
+          <ArrowBackIosIcon /> Prev Banners
+        </Button>
+        <Button onClick={handleNext} disabled={sliderIndex >= sortedBanners.length - bannersPerPage}>
+          Next Banners <ArrowForwardIosIcon />
+        </Button>
       </div>
     </Container>
   );
