@@ -9,6 +9,7 @@ import AllProduct from "../pages/AllProduct/AllProduct";
 import AddBanner from "../pages/addBanner/addBanner";
 import Layout from "../Layout/Layout";
 import Statistic from "../graph/graph";
+import Statistic2 from "../graph/graph3";
 
 function MyRouter(): JSX.Element {
   return (
@@ -24,6 +25,8 @@ function MyRouter(): JSX.Element {
           <Route path="banner/userBanners" element={<UserBanners />} />
           <Route path="banner/editBanner/:id" element={<EditBanner />} />
           <Route path="banner/graph/:id" element={<Statistic />} />
+          <Route path="banner/graphs" element={<Statistic2 />} />
+
         </Route>
       </Routes>
     </Router>
