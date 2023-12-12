@@ -1,4 +1,4 @@
-import { Box, Grid, Slider, Typography } from '@mui/material';
+import { Box, Grid, Slider, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { ClickData } from '../interface/interface';
@@ -53,9 +53,10 @@ export default function Statistic() {
 
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [numBannersToShow, setNumBannersToShow] = useState<number>(5);
+    const [selectedDate, setSelectedDate] = useState<string>('');
 
     useEffect(() => {
-        getTopBannerIdsWithClicks('http://localhost:8008/bannerclicks/')
+        getTopBannerIdsWithClicks(`${api}/bannerclicks`)
             .then(data => {
                 const sortedBanners = data.sort((a, b) => b.clicks - a.clicks);
                 const topBanners = sortedBanners.slice(0, numBannersToShow);
@@ -67,12 +68,16 @@ export default function Statistic() {
         setNumBannersToShow(value as number);
     };
 
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedDate(event.target.value);
+    };
+
     return (
         <Box sx={{ width: '100vw', height: '100vh' }}>
             <Grid container spacing={0} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '2em' }}>
                 <Grid item xs={8}>
                     <Box sx={{ height: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" gutterBottom>
                             Select Number of Popular Banners:
                         </Typography>
                         <Slider
@@ -83,6 +88,16 @@ export default function Statistic() {
                             valueLabelDisplay="auto"
                             onChange={handleSliderChange}
                             sx={{ width: '30%' }}
+                        />
+                         <TextField
+                            label="Select Date"
+                            type="date"
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            sx={{ marginTop: '1em', marginBottom: '2em' }}
                         />
                         <ResponsiveContainer width="90%" height="90%" style={{ backgroundColor: '#b2dfdb', padding: '1em', borderRadius: '0.8em', border: 'solid black 0.1em' }}>
                             <BarChart
