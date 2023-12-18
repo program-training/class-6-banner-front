@@ -10,7 +10,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function UserBanners() {
-
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
   const { banners, status, error } = useAppSelector((state) => state.banners);
@@ -91,7 +90,6 @@ export default function UserBanners() {
     setSliderIndex((prevIndex) => Math.max(prevIndex - bannersPerPage, 0));
   };
 
-
   return (
     <Container
       sx={{
@@ -156,11 +154,9 @@ export default function UserBanners() {
       >
         sort by sales {sortBy === 'sale' && (sortOrder === 'asc' ? '↓' : '↑')}
       </Button>
-
       <Button onClick={handleOpenModal} sx={{ marginBottom: '23px', backgroundColor: '#00796b', color: 'white', marginLeft: '400px' }}>
         Graph Popular Banners
       </Button>
-
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -209,8 +205,6 @@ export default function UserBanners() {
           </div>
         </Fade>
       </Modal>
-
-
       <div
         style={{
           display: "flex",
@@ -295,7 +289,6 @@ export default function UserBanners() {
             </Card>
           </CardActionArea>
         ))}
-
       </div>
       <div
         style={{
@@ -315,6 +308,3 @@ export default function UserBanners() {
     </Container>
   );
 }
-
-
-

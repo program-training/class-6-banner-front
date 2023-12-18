@@ -2,13 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Box, Button, InputLabel, TextField, Typography, CardMedia, CircularProgress } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BannerFormData } from '../../interface/interface';
 import schema from './schema';
 import { uploadImageToCloudinary, updateBanner } from '../../../services/banners.service';
-
-const api = import.meta.env.VITE_MY_SERVER;
+import { getBanner } from '../../../services/banners2.service';
 
 const EditBanner: React.FC = () => {
   const [createAt, setCreateAt] = useState(new Date());
@@ -25,8 +23,7 @@ const EditBanner: React.FC = () => {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get(`${api}/banners/${id}`);
-        const bannerData = response.data;
+        const bannerData = await getBanner(id!);
         setImagePreview(bannerData.image.url);
         Object.entries(bannerData).forEach(([key, value]) => {
           setValue(key as keyof BannerFormData, value as typeof key);
@@ -47,11 +44,13 @@ const EditBanner: React.FC = () => {
       }
     }
   };
+
   const handleReplaceImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
+  
   const onSubmit: SubmitHandler<BannerFormData> = async (data) => {
     try {
       setLoading(true);

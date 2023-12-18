@@ -15,17 +15,15 @@ const UserProfile = () => {
   const Navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
-
   const [editUserOpen, setEditUserOpen] = useState(false);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
 
   const handleEditProfile = () => {
     setEditUserOpen(true);
@@ -33,10 +31,9 @@ const UserProfile = () => {
   };
 
   const handleDeleteAccount = async () => {
-      deleteAccount(handleOpenModal)
-       handleCloseMenu()
-    };
-
+    deleteAccount(handleOpenModal)
+    handleCloseMenu()
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('username');
@@ -62,7 +59,6 @@ const UserProfile = () => {
       <IconButton onClick={handleOpenMenu} sx={{ color: 'inherit' }}>
         <AccountCircleIcon fontSize="large" />
       </IconButton>
-
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

@@ -8,15 +8,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../log-in/functions";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ErrorModal from "../../Templates/ErrorModal";
-const api = import.meta.env.VITE_MY_SERVER;
-
-
+import { PostSignIn } from "../../../services/banners2.service";
 
 export default function SignIn() {
   const Navigate = useNavigate();
@@ -36,7 +34,6 @@ export default function SignIn() {
     password: "",
     passwordVerification: "",
   });
-
   const [isErrorModalOpen, setIsErrorModalOpen] = React.useState(false);
   const [errorModalMessage, setErrorModalMessage] = React.useState("");
 
@@ -53,14 +50,12 @@ export default function SignIn() {
   const handleRegistration = async () => {
     localStorage.setItem("email", JSON.stringify(user.email));
 
-    const usernameError =
-      user.username.length === 0 ? "Username is required" : "";
+    const usernameError = user.username.length === 0 ? "Username is required" : "";
     const emailError = validateEmail(user.email) ? "" : "Invalid email format";
     const passwordError = validatePassword(user.password)
       ? ""
       : "Password must be at least 7 characters long, contain at least one lowercase letter, one uppercase letter, and one digit";
-    const passwordVerificationError =
-      user.password === passwordVerification
+    const passwordVerificationError = user.password === passwordVerification
         ? ""
         : "Password verification does not match the password";
 
@@ -78,7 +73,7 @@ export default function SignIn() {
       !passwordVerificationError
     ) {
       try {
-        const response = await axios.post(` ${api}/users/register`, user);
+        const response = await PostSignIn(user);
         if (response) {
           setSuccessMessage("Sign-up successful!");
           setIsSuccess(true);
@@ -88,8 +83,7 @@ export default function SignIn() {
         }
       } catch (error) {
         const axiosError = error as AxiosError<{ message?: string }>;
-        const errorMessage =
-          axiosError.response?.data?.message || "An error occurred";
+        const errorMessage = axiosError.response?.data?.message || "An error occurred";
         console.error("Error during registration:", axiosError);
         handleOpenErrorModal(errorMessage);
       }

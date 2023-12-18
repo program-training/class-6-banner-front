@@ -7,27 +7,24 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle"; import React from "react";
 import { useState } from "react"
 import { validatePassword, validateEmail } from "../log-in/functions";
-import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-const api = import.meta.env.VITE_MY_SERVER;
-
+import { updatePassword } from "../../../services/banners2.service";
+import { AxiosError } from "axios";
 
 export default function ForgetPassword() {
 
   const Navigate = useNavigate()
   const ls = localStorage.getItem("email")
-  const [status ,setStatus] = useState("")
+  const [status, setStatus] = useState("")
   const [obj, setObg] = useState({
     email: ls ? JSON.parse(ls) : "",
     newPassword: ''
   })
-  const [showPassword ,setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  
 
   const changePassword = async () => {
     setEmailError("");
@@ -53,24 +50,19 @@ export default function ForgetPassword() {
     }
 
     try {
-      const response = await axios.put(
-        `${api}/users/changepassword`,
-        obj
-      );
-      if (response.data.message == "Verification email sent. Please check your email to confirm password change.") {
-        setStatus(response.data.message)
-      }
-
-      else {
+      const response = await updatePassword(obj);
+      if (response?.data.message == "Verification email sent. Please check your email to confirm password change.") {
+        setStatus(response?.data.message)
+      } else {
         setStatus('try again');
       }
-    } catch (error:unknown) {
-      if(error instanceof AxiosError)
-      if (error.response?.data.message == "User not found") {
-        setStatus(error.response?.data.message);
-      } else {
-        console.error("Error during Change password:", error);
-      }
+    } catch (error) {
+      if (error instanceof AxiosError)
+        if (error.response?.data.message == "User not found") {
+          setStatus(error.response?.data.message);
+        } else {
+          console.error("Error during Change password:", error);
+        }
     }
   }
 
@@ -136,11 +128,11 @@ export default function ForgetPassword() {
           />
         </DialogContent>
         {status &&
-        <DialogContentText sx={{ color: status === "Verification email sent. Please check your email to confirm password change." ? "green" : "red", marginLeft: "20px" }}>
-               {status}
-             </DialogContentText>}
+          <DialogContentText sx={{ color: status === "Verification email sent. Please check your email to confirm password change." ? "green" : "red", marginLeft: "20px" }}>
+            {status}
+          </DialogContentText>}
         <DialogActions>
-        <Button onClick={()=>Navigate('/banner/')}> back </Button>
+          <Button onClick={() => Navigate('/banner/')}> back </Button>
           <Button onClick={changePassword}>Change password</Button>
         </DialogActions>
       </Dialog>

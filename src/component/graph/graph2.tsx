@@ -1,4 +1,4 @@
-import { Box, Grid, Slider, TextField, Typography } from '@mui/material';
+import { Box, Grid, Slider, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { ChartData,ClickData3,Click } from '../interface/interface';
@@ -49,7 +49,6 @@ export default function Statistic() {
 
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [numBannersToShow, setNumBannersToShow] = useState<number>(5);
-    const [selectedDate, setSelectedDate] = useState<string>('');
 
     useEffect(() => {
         getTopBannerIdsWithClicks(`http://localhost:8008/bannerclicks/`)
@@ -62,10 +61,6 @@ export default function Statistic() {
 
     const handleSliderChange = (event: Event, value: number | number[]) => {
         setNumBannersToShow(value as number);
-    };
-
-    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(event.target.value);
     };
 
     return (
@@ -84,16 +79,6 @@ export default function Statistic() {
                             valueLabelDisplay="auto"
                             onChange={handleSliderChange}
                             sx={{ width: '30%' }}
-                        />
-                         <TextField
-                            label="Select Date"
-                            type="date"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            sx={{ marginTop: '1em', marginBottom: '2em' }}
                         />
                         <ResponsiveContainer width="90%" height="90%" style={{ backgroundColor: '#b2dfdb', padding: '1em', borderRadius: '0.8em', border: 'solid black 0.1em' }}>
                             <BarChart

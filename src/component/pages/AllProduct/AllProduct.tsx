@@ -11,12 +11,12 @@ export default function AllProduct() {
   const { products, status, error } = useAppSelector((state) => state.products);
   const Navigate = useNavigate();
 
-  async function getProduct(){
-      await dispatch(fetchProduct())
-    }
+  async function getProduct() {
+    await dispatch(fetchProduct())
+  }
 
   useEffect(() => {
-     getProduct();
+    getProduct();
   }, []);
 
   if (status === "loading") {

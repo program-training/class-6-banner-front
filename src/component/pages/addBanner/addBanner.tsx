@@ -46,11 +46,11 @@ const AddBanner: React.FC = () => {
     const onSubmit: SubmitHandler<BannerFormData> = async (data) => {
         const token = localStorage.getItem('token')?.replace(/^"|"$/g, '');
         const options = {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         };
-    
+
         try {
             const requestData = {
                 "id": data.id,
@@ -80,7 +80,7 @@ const AddBanner: React.FC = () => {
             console.error('Error:', error);
         }
     };
-    
+
     return (
         <Box sx={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
             <Typography sx={{ textAlign: "center", fontSize: "30px" }}>Add New Banner</Typography>
@@ -91,14 +91,14 @@ const AddBanner: React.FC = () => {
                     error={!!errors.id}
                     helperText={errors.id?.message}
                 />
-                { uploadedImage ? (
-                <CardMedia
-                    component="img"
-                    alt="No photo added"
-                    height="140"
-                    image={(image || (uploadedImage ? URL.createObjectURL(uploadedImage) : '')) as string}
-                    sx={{ marginBottom: "15px", maxWidth: "222px" }}
-                />) : null}
+                {uploadedImage ? (
+                    <CardMedia
+                        component="img"
+                        alt="No photo added"
+                        height="140"
+                        image={(image || (uploadedImage ? URL.createObjectURL(uploadedImage) : '')) as string}
+                        sx={{ marginBottom: "15px", maxWidth: "222px" }}
+                    />) : null}
                 <TextField className='formField' sx={{ marginBottom: "5px", backgroundColor: "#f9f9f9", display: "none" }}
                     type='file'
                     label="Upload image"

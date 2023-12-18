@@ -132,45 +132,45 @@ export default function Statistic3() {
                         ))}
                     </Select>
 
-                    
+
                     <Slider
-    value={numBannersToShow}
-    min={3}
-    max={7}
-    step={1}
-    valueLabelDisplay="auto"
-    onChange={handleSliderChange}
-    sx={{
-        width: '60%',
-        color: '#5e35b1', 
-        '& .MuiSlider-thumb': {
-            width: 28,
-            height: 28,
-            backgroundColor: '#fff',
-            border: '2px solid currentColor',
-            '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
-                boxShadow: 'inherit',
-            },
-        },
-        '& .MuiSlider-track': {
-            height: 10,
-            borderRadius: 4,
-        },
-        '& .MuiSlider-rail': {
-            height: 10,
-            borderRadius: 4,
-        },
-        '& .MuiSlider-mark': {
-            backgroundColor: '#bfbfbf',
-            height: 8,
-            width: 1,
-            '&.MuiSlider-markActive': {
-                opacity: 1,
-                backgroundColor: 'currentColor',
-            },
-        },
-    }}
-/>
+                        value={numBannersToShow}
+                        min={3}
+                        max={7}
+                        step={1}
+                        valueLabelDisplay="auto"
+                        onChange={handleSliderChange}
+                        sx={{
+                            width: '60%',
+                            color: '#5e35b1',
+                            '& .MuiSlider-thumb': {
+                                width: 28,
+                                height: 28,
+                                backgroundColor: '#fff',
+                                border: '2px solid currentColor',
+                                '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                                    boxShadow: 'inherit',
+                                },
+                            },
+                            '& .MuiSlider-track': {
+                                height: 10,
+                                borderRadius: 4,
+                            },
+                            '& .MuiSlider-rail': {
+                                height: 10,
+                                borderRadius: 4,
+                            },
+                            '& .MuiSlider-mark': {
+                                backgroundColor: '#bfbfbf',
+                                height: 8,
+                                width: 1,
+                                '&.MuiSlider-markActive': {
+                                    opacity: 1,
+                                    backgroundColor: 'currentColor',
+                                },
+                            },
+                        }}
+                    />
 
                 </Grid>
             </Grid>

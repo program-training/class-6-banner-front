@@ -6,16 +6,14 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "./functions";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
-const api = import.meta.env.VITE_MY_SERVER;
+import { PostLogIn } from "../../../services/banners2.service";
 
 export default function LogIn() {
-
   const ls = localStorage.getItem("email")
   const Navigate = useNavigate()
   const [userData, setUserData] = React.useState({
@@ -28,21 +26,13 @@ export default function LogIn() {
   const handleLogIn = async () => {
     if (validateEmail(userData.email) && validatePassword(userData.password)) {
       try {
-        const response = await axios.post(
-          `${api}/users/login`,
-          userData
-        );
-        if (response.data) {
-          localStorage.setItem('username', JSON.stringify(response.data.user.username))
-          localStorage.setItem('token', JSON.stringify(response.data.token))
-          localStorage.setItem('userId', JSON.stringify(response.data.user._id))
-          Navigate('/banner/userBanners')
-        }
-
+        await PostLogIn(userData);
+        Navigate('/banner/userBanners');
       } catch (error) {
-        if (error instanceof AxiosError)
-        setStatus(error.response?.data.message)
-        console.error("Error during registration:", error);
+        if (error instanceof AxiosError) {
+          setStatus(error.response?.data.message)
+          console.error("Error during registration:", error);
+        }
       }
     } else if (validateEmail(userData.email) && !validatePassword(userData.password)) {
       setStatus("סיסמא לא תקינה");
@@ -116,9 +106,9 @@ export default function LogIn() {
           />
         </DialogContent>
         {status &&
-        <DialogContentText sx={{ color: "red", marginLeft: "20px" }}>
-               {status}
-             </DialogContentText>}
+          <DialogContentText sx={{ color: "red", marginLeft: "20px" }}>
+            {status}
+          </DialogContentText>}
         <DialogActions>
           <Button onClick={forgetPassword}>forget password</Button>
           <Button onClick={handleRegistration}>Sign up</Button>
